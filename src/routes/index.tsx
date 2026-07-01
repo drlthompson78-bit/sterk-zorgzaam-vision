@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import heroImg from "@/assets/hero-youth.jpg";
+import logoImg from "@/assets/logo.svg";
 import {
   Heart,
   Users,
@@ -31,7 +32,8 @@ function Index() {
       {/* Top bar */}
       <header className="border-b border-border/60 bg-background/80 backdrop-blur sticky top-0 z-30">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            <img src={logoImg} alt="Sterk & Zorgzaam logo" className="h-10 w-auto" />
             <span className="text-xl font-bold tracking-tight text-primary">
               Sterk <span className="text-accent">&amp;</span> Zorgzaam
             </span>
@@ -343,12 +345,6 @@ function Index() {
               className="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-semibold text-accent-foreground shadow-lg transition hover:brightness-95"
             >
               info@sterkzorgzaam.nl <ArrowRight className="h-4 w-4" />
-            </a>
-            <a
-              href="https://sterkzorgzaam.nl"
-              className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-background px-6 py-3 text-sm font-semibold text-primary hover:bg-primary/5"
-            >
-              Bezoek website
             </a>
           </div>
         </div>
