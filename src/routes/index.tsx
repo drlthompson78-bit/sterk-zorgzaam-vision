@@ -33,7 +33,21 @@ function Index() {
       <header className="border-b border-border/60 bg-background/80 backdrop-blur sticky top-0 z-30">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-3">
-            <img src={logoImg} alt="Sterk & Zorgzaam logo" className="h-10 w-auto" />
+            <span
+              role="img"
+              aria-label="Sterk & Zorgzaam logo"
+              className="block h-10 w-4 bg-primary"
+              style={{
+                WebkitMaskImage: `url(${logoImg})`,
+                maskImage: `url(${logoImg})`,
+                WebkitMaskRepeat: "no-repeat",
+                maskRepeat: "no-repeat",
+                WebkitMaskSize: "contain",
+                maskSize: "contain",
+                WebkitMaskPosition: "center",
+                maskPosition: "center",
+              }}
+            />
             <span className="text-xl font-bold tracking-tight text-primary">
               Sterk <span className="text-accent">&amp;</span> Zorgzaam
             </span>
