@@ -32,26 +32,15 @@ function Index() {
       {/* Top bar */}
       <header className="border-b border-border/60 bg-background/80 backdrop-blur sticky top-0 z-30">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-3">
-            <span
-              role="img"
-              aria-label="Sterk & Zorgzaam logo"
-              className="block h-10 w-4 bg-primary"
-              style={{
-                WebkitMaskImage: `url(${logoImg})`,
-                maskImage: `url(${logoImg})`,
-                WebkitMaskRepeat: "no-repeat",
-                maskRepeat: "no-repeat",
-                WebkitMaskSize: "contain",
-                maskSize: "contain",
-                WebkitMaskPosition: "center",
-                maskPosition: "center",
-              }}
+          <a href="#" aria-label="Sterk & Zorgzaam startpagina" className="block shrink-0">
+            <img
+              src={logoImg}
+              alt="Sterk & Zorgzaam"
+              width={144}
+              height={60}
+              className="h-14 w-auto"
             />
-            <span className="text-xl font-bold tracking-tight text-primary">
-              Sterk <span className="text-accent">&amp;</span> Zorgzaam
-            </span>
-          </div>
+          </a>
           <nav className="hidden gap-8 text-sm font-medium text-muted-foreground md:flex">
             <a href="#missie" className="hover:text-primary">Missie</a>
             <a href="#aanpak" className="hover:text-primary">Aanpak</a>
