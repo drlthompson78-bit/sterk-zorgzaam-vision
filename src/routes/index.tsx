@@ -31,14 +31,14 @@ function Index() {
     <main className="min-h-screen bg-background text-foreground">
       {/* Top bar */}
       <header className="border-b border-border/60 bg-background/80 backdrop-blur sticky top-0 z-30">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6 sm:py-4">
           <a href="#" aria-label="Sterk & Zorgzaam startpagina" className="block shrink-0">
             <img
               src={logoImg}
               alt="Sterk & Zorgzaam"
               width={144}
               height={60}
-              className="h-14 w-auto"
+              className="h-10 w-auto sm:h-14"
             />
           </a>
           <nav className="hidden gap-8 text-sm font-medium text-muted-foreground md:flex">
@@ -50,7 +50,7 @@ function Index() {
           </nav>
           <a
             href="#contact"
-            className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2 text-sm font-semibold text-accent-foreground shadow-sm transition hover:brightness-95"
+            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-accent px-4 py-2 text-xs font-semibold text-accent-foreground shadow-sm transition hover:brightness-95 sm:px-5 sm:text-sm"
           >
             Aan de slag <ArrowRight className="h-4 w-4" />
           </a>
@@ -70,28 +70,28 @@ function Index() {
           className="absolute inset-0 h-full w-full object-cover opacity-25"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/90 to-primary/40" />
-        <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-36">
-          <span className="inline-block rounded-full border border-accent/40 bg-accent/10 px-4 py-1 text-xs font-semibold uppercase tracking-widest text-accent">
+        <div className="relative mx-auto max-w-6xl px-6 py-20 sm:py-24 md:py-36">
+          <span className="inline-block rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-accent sm:px-4 sm:text-xs">
             Jeugdbegeleiding 12 – 18 jaar
           </span>
-          <h1 className="mt-6 max-w-3xl text-4xl font-bold uppercase leading-tight tracking-tight md:text-6xl">
+          <h1 className="mt-6 max-w-3xl text-3xl font-bold uppercase leading-tight tracking-tight sm:text-4xl md:text-6xl">
             Kleine stapjes <span className="text-accent">zijn</span> ook stappen
           </h1>
-          <p className="mt-6 max-w-2xl text-lg text-primary-foreground/80 md:text-xl">
+          <p className="mt-5 max-w-2xl text-base text-primary-foreground/80 sm:text-lg md:text-xl">
             Sterk &amp; Zorgzaam ondersteunt jongeren die vastlopen in gedrag,
             ontwikkeling of omgeving. Cultuursensitief, relationeel en
             praktijkgericht — gericht op duurzaam perspectief.
           </p>
-          <div className="mt-10 flex flex-wrap gap-4">
+          <div className="mt-8 flex flex-wrap gap-3 sm:mt-10 sm:gap-4">
             <a
               href="#contact"
-              className="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-semibold text-accent-foreground shadow-lg transition hover:brightness-95"
+              className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-3 text-sm font-semibold text-accent-foreground shadow-lg transition hover:brightness-95 sm:px-6"
             >
               Aan de slag <ArrowRight className="h-4 w-4" />
             </a>
             <a
               href="#missie"
-              className="inline-flex items-center gap-2 rounded-full border border-primary-foreground/30 px-6 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary-foreground/10"
+              className="inline-flex items-center gap-2 rounded-full border border-primary-foreground/30 px-5 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary-foreground/10 sm:px-6"
             >
               Onze missie
             </a>
