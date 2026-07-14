@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import heroImg from "@/assets/hero-youth.jpg";
+import heroVideo from "@/assets/hero-youth.mp4.asset.json";
 import logoImg from "@/assets/logo.svg";
 import {
   Heart,
@@ -59,11 +59,14 @@ function Index() {
 
       {/* Hero */}
       <section className="relative overflow-hidden bg-primary text-primary-foreground">
-        <img
-          src={heroImg}
-          alt="Jongeren bij Sterk & Zorgzaam"
-          width={1920}
-          height={1080}
+        <video
+          src={heroVideo.url}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          aria-hidden="true"
           className="absolute inset-0 h-full w-full object-cover opacity-25"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/90 to-primary/40" />
