@@ -72,14 +72,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "Sterk & Zorgzaam — Begeleiding voor jongeren 12–18" },
+      { name: "description", content: "Cultuursensitieve, relationele en praktijkgerichte begeleiding voor jongeren die vastlopen in gedrag, ontwikkeling of omgeving." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "Sterk & Zorgzaam — Begeleiding voor jongeren 12–18" },
+      { property: "og:description", content: "Cultuursensitieve, relationele en praktijkgerichte begeleiding voor jongeren die vastlopen in gedrag, ontwikkeling of omgeving." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Sterk & Zorgzaam — Begeleiding voor jongeren 12–18" },
+      { name: "twitter:description", content: "Cultuursensitieve, relationele en praktijkgerichte begeleiding voor jongeren die vastlopen in gedrag, ontwikkeling of omgeving." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/abbefad1-aac8-491e-84d9-5c6356019fa6/id-preview-4c97a9a6--a946eef5-4859-4690-a29d-0c373084754b.lovable.app-1784008542170.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/abbefad1-aac8-491e-84d9-5c6356019fa6/id-preview-4c97a9a6--a946eef5-4859-4690-a29d-0c373084754b.lovable.app-1784008542170.png" },
     ],
     links: [
       {
