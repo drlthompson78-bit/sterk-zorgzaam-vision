@@ -13,6 +13,7 @@ import { Route as PortaalRouteImport } from './routes/portaal'
 import { Route as KwaliteitRouteImport } from './routes/kwaliteit'
 import { Route as AanmeldenRouteImport } from './routes/aanmelden'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 import { Route as ApiPublicDCodeRouteImport } from './routes/api/public/d.$code'
 
 const PortaalRoute = PortaalRouteImport.update({
@@ -35,6 +36,12 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LovableEmailQueueProcessRoute =
+  LovableEmailQueueProcessRouteImport.update({
+    id: '/lovable/email/queue/process',
+    path: '/lovable/email/queue/process',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicDCodeRoute = ApiPublicDCodeRouteImport.update({
   id: '/api/public/d/$code',
   path: '/api/public/d/$code',
@@ -47,6 +54,7 @@ export interface FileRoutesByFullPath {
   '/kwaliteit': typeof KwaliteitRoute
   '/portaal': typeof PortaalRoute
   '/api/public/d/$code': typeof ApiPublicDCodeRoute
+  '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,6 +62,7 @@ export interface FileRoutesByTo {
   '/kwaliteit': typeof KwaliteitRoute
   '/portaal': typeof PortaalRoute
   '/api/public/d/$code': typeof ApiPublicDCodeRoute
+  '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,6 +71,7 @@ export interface FileRoutesById {
   '/kwaliteit': typeof KwaliteitRoute
   '/portaal': typeof PortaalRoute
   '/api/public/d/$code': typeof ApiPublicDCodeRoute
+  '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -71,8 +81,15 @@ export interface FileRouteTypes {
     | '/kwaliteit'
     | '/portaal'
     | '/api/public/d/$code'
+    | '/lovable/email/queue/process'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/aanmelden' | '/kwaliteit' | '/portaal' | '/api/public/d/$code'
+  to:
+    | '/'
+    | '/aanmelden'
+    | '/kwaliteit'
+    | '/portaal'
+    | '/api/public/d/$code'
+    | '/lovable/email/queue/process'
   id:
     | '__root__'
     | '/'
@@ -80,6 +97,7 @@ export interface FileRouteTypes {
     | '/kwaliteit'
     | '/portaal'
     | '/api/public/d/$code'
+    | '/lovable/email/queue/process'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -88,6 +106,7 @@ export interface RootRouteChildren {
   KwaliteitRoute: typeof KwaliteitRoute
   PortaalRoute: typeof PortaalRoute
   ApiPublicDCodeRoute: typeof ApiPublicDCodeRoute
+  LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -120,6 +139,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/lovable/email/queue/process': {
+      id: '/lovable/email/queue/process'
+      path: '/lovable/email/queue/process'
+      fullPath: '/lovable/email/queue/process'
+      preLoaderRoute: typeof LovableEmailQueueProcessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/d/$code': {
       id: '/api/public/d/$code'
       path: '/api/public/d/$code'
@@ -136,6 +162,7 @@ const rootRouteChildren: RootRouteChildren = {
   KwaliteitRoute: KwaliteitRoute,
   PortaalRoute: PortaalRoute,
   ApiPublicDCodeRoute: ApiPublicDCodeRoute,
+  LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
