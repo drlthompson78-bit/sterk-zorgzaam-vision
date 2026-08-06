@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
+import { toast } from "sonner";
 import { ArrowLeft, ArrowRight, Check, Close } from "@/components/site/icons";
 import { BUCKET, supabase } from "@/lib/supabase";
 
@@ -152,13 +153,17 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
     }
     try {
       await navigator.clipboard.writeText(links.join("\n"));
-      setMelding(
+      const tekst =
         selectie.length > 1
-          ? `${selectie.length} koppelingen gekopieerd (7 dagen geldig)`
-          : "Koppeling gekopieerd (7 dagen geldig)",
-      );
+          ? `${selectie.length} koppelingen gekopieerd`
+          : "Koppeling gekopieerd";
+      toast.success(tekst, {
+        description: "Plak de link om te delen — 7 dagen geldig.",
+      });
+      setMelding(`${tekst} ✓`);
       window.setTimeout(() => setMelding(""), 4000);
     } catch {
+      toast.error("Kopiëren naar het klembord lukte niet.");
       setFout("Kopiëren naar het klembord lukte niet.");
     }
   };
