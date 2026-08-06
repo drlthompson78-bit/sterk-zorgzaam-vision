@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ArrowRight } from "@/components/site/icons";
 import { inlogFout, supabase } from "@/lib/supabase";
+import { lovable } from "@/integrations/lovable/index";
 
 /** Echt inlogscherm van het documentenportaal. */
 export function PortaalInloggen() {
@@ -10,21 +11,75 @@ export function PortaalInloggen() {
   const [fout, setFout] = useState("");
   const [herstelGestuurd, setHerstelGestuurd] = useState(false);
 
+  /* Tweestapsverificatie: gevuld zodra het account een extra code vraagt. */
+  const [factorId, setFactorId] = useState("");
+  const [code, setCode] = useState("");
+
+  /* Vraagt het account om een extra code? Zo ja: toon het codescherm. */
+  const controleerTweestaps = async () => {
+    const { data } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+    if (!data || data.currentLevel === data.nextLevel) return false;
+    const { data: factoren } = await supabase.auth.mfa.listFactors();
+    const factor = factoren?.totp?.[0];
+    if (!factor) return false;
+    setFactorId(factor.id);
+    return true;
+  };
+
   const inloggen = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!supabase) return;
     setBezig(true);
     setFout("");
     const { error } = await supabase.auth.signInWithPassword({
       email: email.trim(),
       password: wachtwoord,
     });
+    if (error) {
+      setBezig(false);
+      setFout(inlogFout(error.message));
+      return;
+    }
+    await controleerTweestaps();
+    setBezig(false);
+  };
+
+  const codeVersturen = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setBezig(true);
+    setFout("");
+    const { data: uitdaging, error: uitdagingFout } = await supabase.auth.mfa.challenge({ factorId });
+    if (uitdagingFout || !uitdaging) {
+      setBezig(false);
+      setFout(inlogFout(uitdagingFout?.message ?? ""));
+      return;
+    }
+    const { error } = await supabase.auth.mfa.verify({
+      factorId,
+      challengeId: uitdaging.id,
+      code: code.trim(),
+    });
     setBezig(false);
     if (error) setFout(inlogFout(error.message));
   };
 
+  const socialInloggen = async (provider: "google" | "apple") => {
+    setFout("");
+    setBezig(true);
+    const result = await lovable.auth.signInWithOAuth(provider, {
+      redirect_uri: `${window.location.origin}/portaal`,
+    });
+    if (result.error) {
+      setBezig(false);
+      setFout("Inloggen via die dienst lukte niet. Probeer het opnieuw.");
+      return;
+    }
+    if (result.redirected) return;
+    await controleerTweestaps();
+    setBezig(false);
+  };
+
   const wachtwoordVergeten = async () => {
-    if (!supabase || !email.trim()) {
+    if (!email.trim()) {
       setFout("Vul eerst je e-mailadres in, dan sturen we een herstellink.");
       return;
     }
@@ -34,6 +89,54 @@ export function PortaalInloggen() {
     });
     setHerstelGestuurd(true);
   };
+
+  if (factorId) {
+    return (
+      <div className="pz-inlogkaart">
+        <img src="/assets/logo.svg" alt="Sterk & Zorgzaam" className="pz-inloglogo" />
+        <p className="pz-eyebrow">Tweestapsverificatie</p>
+        <h1>Nog één stap</h1>
+        <p className="pz-sub">Vul de code van zes cijfers uit je authenticator-app in.</p>
+
+        <form onSubmit={codeVersturen} className="pz-form">
+          <label>
+            Verificatiecode
+            <input
+              type="text"
+              inputMode="numeric"
+              autoComplete="one-time-code"
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              placeholder="123456"
+              maxLength={6}
+              required
+            />
+          </label>
+          {fout && (
+            <p className="pz-fout" role="alert">
+              {fout}
+            </p>
+          )}
+          <button type="submit" className="pz-knop-donker" disabled={bezig}>
+            {bezig ? "Bezig met controleren…" : "Bevestigen"}
+            {!bezig && <ArrowRight stroke="#d3a142" width={16} />}
+          </button>
+        </form>
+
+        <button
+          type="button"
+          className="pz-tekstknop"
+          onClick={async () => {
+            await supabase.auth.signOut();
+            setFactorId("");
+            setCode("");
+          }}
+        >
+          Annuleren
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="pz-inlogkaart">
@@ -83,6 +186,29 @@ export function PortaalInloggen() {
           {!bezig && <ArrowRight stroke="#d3a142" width={16} />}
         </button>
       </form>
+
+      <div className="pz-scheiding">
+        <span>of</span>
+      </div>
+
+      <div className="pz-social">
+        <button
+          type="button"
+          className="pz-knop-omlijnd"
+          onClick={() => socialInloggen("google")}
+          disabled={bezig}
+        >
+          Doorgaan met Google
+        </button>
+        <button
+          type="button"
+          className="pz-knop-omlijnd"
+          onClick={() => socialInloggen("apple")}
+          disabled={bezig}
+        >
+          Doorgaan met Apple
+        </button>
+      </div>
 
       <button type="button" className="pz-tekstknop" onClick={wachtwoordVergeten}>
         Wachtwoord vergeten?

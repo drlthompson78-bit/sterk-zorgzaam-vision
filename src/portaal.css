@@ -417,3 +417,27 @@
     font-size: 0.56rem;
   }
 }
+
+/* ------------------------------------------------- inloggen via Google/Apple */
+
+.pz-scheiding {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0 16px;
+  color: #647176;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.pz-scheiding::before,
+.pz-scheiding::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(19, 42, 52, 0.14);
+}
+.pz-social {
+  display: grid;
+  gap: 10px;
+}
