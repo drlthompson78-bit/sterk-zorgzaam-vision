@@ -304,7 +304,7 @@ export function MobielAanmelden() {
             </a>
             <p className="mz-stap-sub">
               Liever direct contact? Bel <a href="tel:+31628873094">06 288 730 94</a> of mail{" "}
-              <a href="mailto:hallo@sterkzorgzaam.nl">hallo@sterkzorgzaam.nl</a>.
+              <a href="mailto:aanmelden@sterkzorgzaam.nl">aanmelden@sterkzorgzaam.nl</a>.
             </p>
             <FadeLink to="/" className="mz-knop-omlijnd">
               Terug naar home

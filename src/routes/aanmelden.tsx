@@ -375,7 +375,7 @@ function Aanmelden() {
                 </a>
                 <p className="sz-bedankt-voet">
                   Liever direct contact? Mail{" "}
-                  <a href="mailto:hallo@sterkzorgzaam.nl">hallo@sterkzorgzaam.nl</a>
+                  <a href="mailto:aanmelden@sterkzorgzaam.nl">aanmelden@sterkzorgzaam.nl</a>
                 </p>
               </div>
             )}

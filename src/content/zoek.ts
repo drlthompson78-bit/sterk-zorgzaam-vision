@@ -152,7 +152,7 @@ export const ITEMS: Resultaat[] = [
     tekst: "Het aanmeldformulier — wij reageren binnen twee werkdagen.",
     to: "/aanmelden",
     inhoud:
-      "Aanmelden of aanmelding van een jongere, zoon, dochter of client. Het aanmeldformulier in vijf stappen: wie meldt aan als ouder, verzorger, professional of verwijzer, gegevens van de jongere met geboortedatum en BSN, adres, contactgegevens en de situatie. Wij reageren binnen twee werkdagen. Ook voor een eerste kennismaking of vrijblijvend gesprek. Spoed of regulier.",
+      "Aanmelden of aanmelding van een jongere, zoon, dochter of client. Het aanmeldformulier in vijf stappen: wie meldt aan als ouder, verzorger, professional of verwijzer, gegevens van de jongere met geboortedatum en BSN, adres, contactgegevens en de situatie. Wij reageren binnen twee werkdagen. Ook voor een eerste kennismaking of vrijblijvend gesprek. Spoed of regulier. Mailen kan ook rechtstreeks naar aanmelden@sterkzorgzaam.nl.",
     tags: ["Aanmelden"],
   },
   {
