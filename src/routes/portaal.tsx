@@ -78,7 +78,7 @@ function Portaal() {
               {naam}
               {beheerder && <b> · beheerder</b>}
             </span>
-            <button type="button" onClick={() => supabase?.auth.signOut()} className="pz-uitloggen">
+            <button type="button" onClick={() => supabase.auth.signOut()} className="pz-uitloggen">
               Uitloggen
             </button>
           </div>
