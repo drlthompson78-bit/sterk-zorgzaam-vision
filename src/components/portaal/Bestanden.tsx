@@ -45,6 +45,7 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
   const [selectie, setSelectie] = useState<string[]>([]);
   const [zipBezig, setZipBezig] = useState(false);
   const [melding, setMelding] = useState("");
+  const [mapStats, setMapStats] = useState<Record<string, { aantal: number; bytes: number }>>({});
   const bestandKiezer = useRef<HTMLInputElement>(null);
   const mapKiezer = useRef<HTMLInputElement>(null);
 
@@ -78,6 +79,46 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
   const kruimels = pad ? pad.split("/") : [];
 
   const volledigPad = (naam: string) => (pad ? `${pad}/${naam}` : naam);
+
+  /* Per map tellen hoeveel bestanden erin zitten (inclusief submappen) en
+     hoeveel ruimte die innemen. */
+  useEffect(() => {
+    const db = supabase;
+    if (!db || mappen.length === 0) return;
+    let afgebroken = false;
+
+    const meten = async (map: string): Promise<{ aantal: number; bytes: number }> => {
+      const { data } = await db.storage.from(BUCKET).list(map, { limit: 500 });
+      let aantal = 0;
+      let bytes = 0;
+      for (const item of data ?? []) {
+        if (item.name === PLAATSHOUDER) continue;
+        if (item.id === null) {
+          const sub = await meten(`${map}/${item.name}`);
+          aantal += sub.aantal;
+          bytes += sub.bytes;
+        } else {
+          aantal += 1;
+          bytes += (item as Item).metadata?.size ?? 0;
+        }
+      }
+      return { aantal, bytes };
+    };
+
+    (async () => {
+      for (const map of mappen) {
+        const volledig = pad ? `${pad}/${map.name}` : map.name;
+        const stat = await meten(volledig);
+        if (afgebroken) return;
+        setMapStats((huidig) => ({ ...huidig, [volledig]: stat }));
+      }
+    })();
+
+    return () => {
+      afgebroken = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pad, items]);
 
   const downloaden = async (naam: string) => {
     if (!supabase) return;
@@ -434,7 +475,13 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
                   </svg>
                 </span>
                 <span className="pz-naam">{map.name}</span>
-                <span className="pz-meta">Map</span>
+                <span className="pz-meta">
+                  {mapStats[volledigPad(map.name)]
+                    ? `${mapStats[volledigPad(map.name)]!.aantal} bestand${
+                        mapStats[volledigPad(map.name)]!.aantal === 1 ? "" : "en"
+                      } · ${leesbaarFormaat(mapStats[volledigPad(map.name)]!.bytes)}`
+                    : "Map"}
+                </span>
                 <ArrowRight stroke="#8a6420" width={14} />
               </button>
               {beheerder && (
