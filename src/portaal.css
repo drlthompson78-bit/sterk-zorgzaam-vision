@@ -320,6 +320,49 @@
   padding: 0;
   list-style: none;
 }
+.pz-selectiebalk {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.pz-selectall {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.pz-selectall input,
+.pz-vink input {
+  width: 17px;
+  height: 17px;
+  accent-color: #d3a142;
+  cursor: pointer;
+}
+.pz-selectietelling {
+  flex: 1;
+  color: #647176;
+  font-size: 0.78rem;
+}
+.pz-vink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  flex: none;
+  border-right: 1px solid rgba(19, 42, 52, 0.08);
+}
+.pz-lijst-legacy {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
 .pz-rij {
   display: flex;
   align-items: stretch;
