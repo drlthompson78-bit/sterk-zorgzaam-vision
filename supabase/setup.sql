@@ -78,6 +78,8 @@ on conflict (id) do update set public = false;
 
 drop policy if exists "ingelogd mag lezen" on storage.objects;
 drop policy if exists "portaallid mag lezen" on storage.objects;
+grant usage on schema prive to authenticated;
+grant execute on function prive.is_portaallid() to authenticated;
 create policy "portaallid mag lezen" on storage.objects
   for select to authenticated
   using (bucket_id = 'documenten' and prive.is_portaallid());
