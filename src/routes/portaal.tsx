@@ -25,10 +25,6 @@ function Portaal() {
 
   /* Sessie ophalen en blijven volgen (in- en uitloggen, verlopen sessie). */
   useEffect(() => {
-    if (!supabase) {
-      setGeladen(true);
-      return;
-    }
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
       setGeladen(true);
@@ -42,20 +38,32 @@ function Portaal() {
   /* Rol bepaalt of de beheerknoppen zichtbaar zijn. De database bewaakt dit
      zelf ook: zonder de rol 'beheerder' weigert de opslag een upload. */
   useEffect(() => {
-    if (!supabase || !session) {
+    if (!session) {
       setBeheerder(false);
       setNaam("");
       return;
     }
-    supabase
-      .from("profielen")
-      .select("naam, rol")
-      .eq("id", session.user.id)
-      .maybeSingle()
-      .then(({ data }) => {
-        setBeheerder(data?.rol === "beheerder");
-        setNaam(data?.naam || session.user.email || "");
-      });
+    const laadProfiel = async () => {
+      const { data } = await supabase
+        .from("profielen")
+        .select("naam, rol")
+        .eq("id", session.user.id)
+        .maybeSingle();
+      if (!data) {
+        /* Eerste keer inloggen: profiel aanmaken met de standaardrol. */
+        const naamUitAccount =
+          (session.user.user_metadata?.["naam"] as string | undefined) ??
+          (session.user.user_metadata?.["full_name"] as string | undefined) ??
+          "";
+        await supabase.from("profielen").insert({ id: session.user.id, naam: naamUitAccount });
+        setBeheerder(false);
+        setNaam(naamUitAccount || session.user.email || "");
+        return;
+      }
+      setBeheerder(data.rol === "beheerder");
+      setNaam(data.naam || session.user.email || "");
+    };
+    void laadProfiel();
   }, [session]);
 
   return (
@@ -78,16 +86,7 @@ function Portaal() {
       </header>
 
       <main className="pz-main">
-        {!supabase ? (
-          <div className="pz-inlogkaart">
-            <p className="pz-eyebrow">Documentenportaal</p>
-            <h1>Nog niet gekoppeld</h1>
-            <p className="pz-sub">
-              Het portaal staat klaar, maar de database is nog niet verbonden. Koppel Supabase aan
-              dit project; daarna werkt het inloggen meteen.
-            </p>
-          </div>
-        ) : !geladen ? (
+        {!geladen ? (
           <p className="pz-leeg">Even geduld…</p>
         ) : !session ? (
           <PortaalInloggen />
