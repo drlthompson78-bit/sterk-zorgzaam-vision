@@ -13,6 +13,7 @@ import { Route as PortaalRouteImport } from './routes/portaal'
 import { Route as KwaliteitRouteImport } from './routes/kwaliteit'
 import { Route as AanmeldenRouteImport } from './routes/aanmelden'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiPublicDCodeRouteImport } from './routes/api/public/d.$code'
 
 const PortaalRoute = PortaalRouteImport.update({
   id: '/portaal',
@@ -34,18 +35,25 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicDCodeRoute = ApiPublicDCodeRouteImport.update({
+  id: '/api/public/d/$code',
+  path: '/api/public/d/$code',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/aanmelden': typeof AanmeldenRoute
   '/kwaliteit': typeof KwaliteitRoute
   '/portaal': typeof PortaalRoute
+  '/api/public/d/$code': typeof ApiPublicDCodeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/aanmelden': typeof AanmeldenRoute
   '/kwaliteit': typeof KwaliteitRoute
   '/portaal': typeof PortaalRoute
+  '/api/public/d/$code': typeof ApiPublicDCodeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +61,25 @@ export interface FileRoutesById {
   '/aanmelden': typeof AanmeldenRoute
   '/kwaliteit': typeof KwaliteitRoute
   '/portaal': typeof PortaalRoute
+  '/api/public/d/$code': typeof ApiPublicDCodeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/aanmelden' | '/kwaliteit' | '/portaal'
+  fullPaths:
+    | '/'
+    | '/aanmelden'
+    | '/kwaliteit'
+    | '/portaal'
+    | '/api/public/d/$code'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/aanmelden' | '/kwaliteit' | '/portaal'
-  id: '__root__' | '/' | '/aanmelden' | '/kwaliteit' | '/portaal'
+  to: '/' | '/aanmelden' | '/kwaliteit' | '/portaal' | '/api/public/d/$code'
+  id:
+    | '__root__'
+    | '/'
+    | '/aanmelden'
+    | '/kwaliteit'
+    | '/portaal'
+    | '/api/public/d/$code'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,6 +87,7 @@ export interface RootRouteChildren {
   AanmeldenRoute: typeof AanmeldenRoute
   KwaliteitRoute: typeof KwaliteitRoute
   PortaalRoute: typeof PortaalRoute
+  ApiPublicDCodeRoute: typeof ApiPublicDCodeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -99,6 +120,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/d/$code': {
+      id: '/api/public/d/$code'
+      path: '/api/public/d/$code'
+      fullPath: '/api/public/d/$code'
+      preLoaderRoute: typeof ApiPublicDCodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -107,6 +135,7 @@ const rootRouteChildren: RootRouteChildren = {
   AanmeldenRoute: AanmeldenRoute,
   KwaliteitRoute: KwaliteitRoute,
   PortaalRoute: PortaalRoute,
+  ApiPublicDCodeRoute: ApiPublicDCodeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

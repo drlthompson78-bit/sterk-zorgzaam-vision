@@ -129,20 +129,26 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
     setZipBezig(false);
   };
 
-  /* "Delen" = een tijdelijke koppeling (7 dagen) op het klembord. */
+  /* "Delen" = een korte koppeling (7 dagen) op het klembord. De code verwijst
+     naar het bestand; de lange ondertekende opslag-URL blijft binnenskamers. */
   const koppelingKopieren = async () => {
     if (!supabase || selectie.length === 0) return;
     setFout("");
     const links: string[] = [];
     for (const naam of selectie) {
-      const { data, error } = await supabase.storage
-        .from(BUCKET)
-        .createSignedUrl(volledigPad(naam), 60 * 60 * 24 * 7);
-      if (error || !data) {
+      const code = Array.from(crypto.getRandomValues(new Uint8Array(5)))
+        .map((n) => "abcdefghijkmnpqrstuvwxyz23456789"[n % 32])
+        .join("");
+      const { error } = await supabase.from("deellinks").insert({
+        code,
+        pad: volledigPad(naam),
+        aangemaakt_door: session.user.id,
+      });
+      if (error) {
         setFout("De koppeling kon niet worden gemaakt.");
         return;
       }
-      links.push(selectie.length > 1 ? `${naam}: ${data.signedUrl}` : data.signedUrl);
+      links.push(`${window.location.origin}/api/public/d/${code}`);
     }
     try {
       await navigator.clipboard.writeText(links.join("\n"));
