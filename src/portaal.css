@@ -639,3 +639,47 @@
   color: #2c6b4f;
   font-size: 0.86rem;
 }
+
+/* Naam wijzigen van een bestand of map, in de rij zelf. */
+.pz-hernoem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  flex: none;
+  background: transparent;
+  border: none;
+  border-left: 1px solid rgba(19, 42, 52, 0.1);
+  cursor: pointer;
+}
+.pz-hernoem:hover {
+  background: rgba(19, 42, 52, 0.07);
+}
+.pz-hernoemveld {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 14px;
+}
+.pz-hernoemveld input {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid rgba(19, 42, 52, 0.25);
+  border-radius: 6px;
+  font: inherit;
+  background: #fff;
+}
+.pz-hernoemveld button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  background: rgba(211, 161, 66, 0.18);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
