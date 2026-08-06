@@ -231,6 +231,28 @@ body.sz-leaving {
   width: 11px;
   transition: transform 420ms cubic-bezier(0.25, 0.8, 0.3, 1);
 }
+
+.sz-loginbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  padding: 6px 0;
+  font-size: 0.81rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  color: var(--sz-ink);
+  white-space: nowrap;
+  border-bottom: 1px solid transparent;
+  transition: border-color 200ms ease;
+}
+.sz-loginbtn:hover {
+  border-bottom-color: var(--sz-gold-text);
+}
+.sz-loginbtn svg {
+  flex: none;
+}
 .is-open > .sz-chev,
 .sz-chev.is-open {
   transform: rotate(180deg);
