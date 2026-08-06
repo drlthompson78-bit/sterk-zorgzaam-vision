@@ -4,6 +4,7 @@ import type { Session } from "@supabase/supabase-js";
 import { FadeLink } from "@/components/site/nav";
 import { PortaalInloggen } from "@/components/portaal/Inloggen";
 import { Bestanden } from "@/components/portaal/Bestanden";
+import { Gebruikers } from "@/components/portaal/Gebruikers";
 import { supabase } from "@/lib/supabase";
 
 export const Route = createFileRoute("/portaal")({
@@ -22,6 +23,7 @@ function Portaal() {
   const [naam, setNaam] = useState("");
   const [beheerder, setBeheerder] = useState(false);
   const [geladen, setGeladen] = useState(false);
+  const [tab, setTab] = useState<"documenten" | "gebruikers">("documenten");
 
   /* Sessie ophalen en blijven volgen (in- en uitloggen, verlopen sessie). */
   useEffect(() => {
@@ -94,12 +96,36 @@ function Portaal() {
           <>
             <div className="pz-intro">
               <p className="pz-eyebrow">Documentenportaal</p>
-              <h1>Documenten</h1>
+              <h1>{tab === "gebruikers" ? "Gebruikers" : "Documenten"}</h1>
               <p className="pz-sub">
-                Kwaliteitsdocumentatie van Sterk &amp; Zorgzaam. Downloads worden vastgelegd.
+                {tab === "gebruikers"
+                  ? "Accounts uitnodigen, rollen wisselen en toegang intrekken."
+                  : "Kwaliteitsdocumentatie van Sterk & Zorgzaam. Downloads worden vastgelegd."}
               </p>
             </div>
-            <Bestanden session={session} beheerder={beheerder} />
+            {beheerder && (
+              <div className="pz-tabs">
+                <button
+                  type="button"
+                  className={tab === "documenten" ? "is-hier" : undefined}
+                  onClick={() => setTab("documenten")}
+                >
+                  Documenten
+                </button>
+                <button
+                  type="button"
+                  className={tab === "gebruikers" ? "is-hier" : undefined}
+                  onClick={() => setTab("gebruikers")}
+                >
+                  Gebruikers
+                </button>
+              </div>
+            )}
+            {beheerder && tab === "gebruikers" ? (
+              <Gebruikers eigenId={session.user.id} />
+            ) : (
+              <Bestanden session={session} beheerder={beheerder} />
+            )}
           </>
         )}
       </main>

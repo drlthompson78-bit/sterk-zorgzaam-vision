@@ -447,3 +447,114 @@
   flex: 0 0 auto;
   display: block;
 }
+
+/* ------------------------------------------------- gebruikersbeheer */
+
+.pz-tabs {
+  display: flex;
+  gap: 8px;
+  margin: 0 0 20px;
+  border-bottom: 1px solid rgba(19, 42, 52, 0.12);
+}
+.pz-tabs button {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 10px 4px;
+  margin-right: 18px;
+  font: inherit;
+  font-size: 0.86rem;
+  color: #647176;
+  cursor: pointer;
+}
+.pz-tabs button.is-hier {
+  color: #132a34;
+  border-bottom-color: #c9a24a;
+  font-weight: 600;
+}
+.pz-uitnodigen {
+  border: 1px solid rgba(19, 42, 52, 0.12);
+  border-radius: 10px;
+  padding: 18px;
+  margin-bottom: 22px;
+  background: #fff;
+}
+.pz-uitnodigen h2 {
+  margin: 0 0 14px;
+  font-size: 0.95rem;
+  color: #132a34;
+}
+.pz-velden {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.pz-velden label {
+  display: grid;
+  gap: 5px;
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #647176;
+}
+.pz-velden input,
+.pz-velden select,
+.pz-gebruikeracties select {
+  font: inherit;
+  font-size: 0.9rem;
+  text-transform: none;
+  letter-spacing: normal;
+  color: #132a34;
+  padding: 9px 10px;
+  border: 1px solid rgba(19, 42, 52, 0.18);
+  border-radius: 6px;
+  background: #fff;
+}
+.pz-gebruikerslijst {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid rgba(19, 42, 52, 0.12);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.pz-gebruikerslijst li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 14px 16px;
+  background: #fff;
+  border-bottom: 1px solid rgba(19, 42, 52, 0.08);
+}
+.pz-gebruikerslijst li:last-child {
+  border-bottom: none;
+}
+.pz-gebruikerinfo {
+  display: grid;
+  gap: 2px;
+}
+.pz-gebruikerinfo strong {
+  color: #132a34;
+  font-size: 0.94rem;
+}
+.pz-gebruikerinfo span {
+  color: #48575d;
+  font-size: 0.84rem;
+}
+.pz-gebruikerinfo small {
+  color: #7b878b;
+  font-size: 0.75rem;
+}
+.pz-gebruikeracties {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.pz-melding {
+  margin: 6px 2px 16px;
+  color: #2c6b4f;
+  font-size: 0.86rem;
+}
