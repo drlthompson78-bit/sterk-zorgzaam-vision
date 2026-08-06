@@ -46,7 +46,9 @@ export function PortaalInloggen() {
     e.preventDefault();
     setBezig(true);
     setFout("");
-    const { data: uitdaging, error: uitdagingFout } = await supabase.auth.mfa.challenge({ factorId });
+    const { data: uitdaging, error: uitdagingFout } = await supabase.auth.mfa.challenge({
+      factorId,
+    });
     if (uitdagingFout || !uitdaging) {
       setBezig(false);
       setFout(inlogFout(uitdagingFout?.message ?? ""));

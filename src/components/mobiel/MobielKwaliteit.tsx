@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { FadeLink } from "@/components/site/nav";
 import { ChevronDown, IconCookie, IconGesprek, IconInfo, IconSlot } from "@/components/site/icons";
 import { MobielActiebalk, MobielTopbar } from "./Chroom";
+import { ERKENNINGEN } from "@/content/erkenningen";
 
 const RIJEN = [
   {
@@ -130,7 +131,8 @@ export function MobielKwaliteit() {
         <p className="mz-eyebrow mz-eyebrow--goud">Kwaliteit</p>
         <h1>Zorgvuldig, transparant en aanspreekbaar.</h1>
         <p className="mz-kw-lead">
-          Goede begeleiding begint met luisteren, duidelijke afspraken en blijven leren.
+          Goede begeleiding begint met luisteren, duidelijke afspraken en blijven leren — en bij
+          welke registers en meldpunten wij zijn aangesloten.
         </p>
       </section>
 
@@ -172,6 +174,29 @@ export function MobielKwaliteit() {
             </div>
           </div>
         ))}
+      </section>
+
+      <section className="mz-erkenningen">
+        <h2>Samen Sterk &amp; Zorgzaam is Wtza-erkend</h2>
+        <p>Officieel geregistreerd en opgenomen in het Zorgaanbiedersportaal.</p>
+        <div className="mz-keurmerken">
+          {ERKENNINGEN.map((merk) => (
+            <a key={merk.label} href={merk.href} target="_blank" rel="noopener">
+              <img src={merk.src} alt={merk.alt} style={{ maxHeight: merk.hoogteMobiel }} />
+              <span>{merk.label}</span>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#d3a142"
+                strokeWidth={2.2}
+                aria-hidden="true"
+              >
+                <path d="M7 17 17 7" />
+                <path d="M7 7h10v10" />
+              </svg>
+            </a>
+          ))}
+        </div>
       </section>
 
       <section className="mz-kw-voet">

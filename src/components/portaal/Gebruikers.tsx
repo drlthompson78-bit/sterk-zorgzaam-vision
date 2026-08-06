@@ -123,7 +123,11 @@ export function Gebruikers({ eigenId }: { eigenId: string }) {
           </label>
           <label>
             <span>Naam</span>
-            <input value={naam} onChange={(e) => setNaam(e.target.value)} placeholder="Voornaam Achternaam" />
+            <input
+              value={naam}
+              onChange={(e) => setNaam(e.target.value)}
+              placeholder="Voornaam Achternaam"
+            />
           </label>
           <label>
             <span>Rol</span>

@@ -4,6 +4,7 @@ import { Footer } from "@/components/site/Footer";
 import { AnchorLink, FadeLink, useHashScroll } from "@/components/site/nav";
 import { ArrowRight, IconCookie, IconGesprek, IconInfo, IconSlot } from "@/components/site/icons";
 import { MobielKwaliteit } from "@/components/mobiel/MobielKwaliteit";
+import { ERKENNINGEN } from "@/content/erkenningen";
 
 export const Route = createFileRoute("/kwaliteit")({
   component: Kwaliteit,
@@ -18,6 +19,23 @@ export const Route = createFileRoute("/kwaliteit")({
     ],
   }),
 });
+
+/** Pijltje dat aangeeft dat de link naar een andere site gaat. */
+function ExternLink() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      aria-hidden="true"
+      style={{ width: 12 }}
+    >
+      <path d="M7 17 17 7" />
+      <path d="M7 7h10v10" />
+    </svg>
+  );
+}
 
 const DOCUMENTEN = [
   {
@@ -71,7 +89,8 @@ function Kwaliteit() {
           <h1 id="kwaliteit-title">Zorgvuldig, transparant en aanspreekbaar.</h1>
           <p>
             Goede begeleiding begint met luisteren, duidelijke afspraken en blijven leren. Hier lees
-            je hoe wij omgaan met privacy, cookies en klachten.
+            je hoe wij omgaan met privacy, cookies en klachten — en bij welke registers en
+            meldpunten wij zijn aangesloten.
           </p>
         </section>
 
@@ -226,6 +245,39 @@ function Kwaliteit() {
               Ontbreekt er informatie of klopt er iets niet? Laat het ons weten: mail naar{" "}
               <a href="mailto:info@sterkzorgzaam.nl">info@sterkzorgzaam.nl</a>.
             </p>
+          </div>
+        </section>
+
+        <section
+          id="erkenningen"
+          className="sz-section sz-kw-sectie sz-erkenningen"
+          aria-labelledby="erkenningen-title"
+        >
+          <header>
+            <p className="sz-eyebrow">Erkenningen</p>
+            <h2 id="erkenningen-title">Samen Sterk &amp; Zorgzaam is Wtza-erkend</h2>
+            <p className="sz-kw-onder">
+              Officieel geregistreerd en opgenomen in het Zorgaanbiedersportaal.
+            </p>
+          </header>
+          <div>
+            <p className="sz-erkenningen-intro">
+              Wij zijn aangesloten bij onafhankelijke registers en meldpunten. Via onderstaande
+              logo&apos;s kom je rechtstreeks bij de betreffende organisatie.
+            </p>
+            <div className="sz-keurmerken">
+              {ERKENNINGEN.map((merk) => (
+                <a key={merk.label} href={merk.href} target="_blank" rel="noopener">
+                  <span className="sz-keurmerk-logo">
+                    <img src={merk.src} alt={merk.alt} style={{ maxHeight: merk.hoogte }} />
+                  </span>
+                  <span className="sz-keurmerk-label">
+                    {merk.label}
+                    <ExternLink />
+                  </span>
+                </a>
+              ))}
+            </div>
           </div>
         </section>
 
