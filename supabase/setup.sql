@@ -77,9 +77,10 @@ values ('documenten', 'documenten', false)
 on conflict (id) do update set public = false;
 
 drop policy if exists "ingelogd mag lezen" on storage.objects;
-create policy "ingelogd mag lezen" on storage.objects
+drop policy if exists "portaallid mag lezen" on storage.objects;
+create policy "portaallid mag lezen" on storage.objects
   for select to authenticated
-  using (bucket_id = 'documenten');
+  using (bucket_id = 'documenten' and prive.is_portaallid());
 
 drop policy if exists "beheerder mag uploaden" on storage.objects;
 create policy "beheerder mag uploaden" on storage.objects
