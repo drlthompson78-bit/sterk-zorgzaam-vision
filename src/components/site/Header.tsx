@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { AnchorLink, FadeLink } from "./nav";
-import { FGROEPEN, ITEMS, useTypewriter } from "@/content/zoek";
+import { FGROEPEN, useTypewriter, zoeken } from "@/content/zoek";
 import { ArrowLeft, ArrowRight, ChevronDown, Close, Sparkle, User } from "./icons";
 
 const MENU_TEGELS = [
@@ -16,6 +16,7 @@ export function Header() {
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [lijstweergave, setLijstweergave] = useState(false);
   const [selectie, setSelectie] = useState<Record<string, boolean>>({});
+  const [zoekterm, setZoekterm] = useState("");
   const sluitTimer = useRef<number | undefined>(undefined);
   const placeholder = useTypewriter(zoekOpen);
 
@@ -29,10 +30,8 @@ export function Header() {
   };
 
   const toggleFilter = (label: string) => setSelectie((s) => ({ ...s, [label]: !s[label] }));
-  const actieveFilters = FGROEPEN.flatMap((g) => g.items).filter((l) => selectie[l]);
-  const resultaten = actieveFilters.length
-    ? ITEMS.filter((it) => it.tags.some((t) => selectie[t]))
-    : [];
+  const { actief: actieveFilters, resultaten } = zoeken(selectie, zoekterm);
+  const heeftVraag = zoekterm.trim().length >= 2;
 
   const sluitZoek = () => {
     setZoekOpen(false);
@@ -148,7 +147,13 @@ export function Header() {
           Wat je ook zoekt, <strong>we denken graag mee</strong>
         </h2>
         <div className="sz-zoek-veld" onClick={(e) => e.stopPropagation()}>
-          <textarea placeholder={`Bijvoorbeeld: ${placeholder}`} aria-label="Zoeken" rows={4} />
+          <textarea
+            value={zoekterm}
+            onChange={(e) => setZoekterm(e.target.value)}
+            placeholder={`Bijvoorbeeld: ${placeholder}`}
+            aria-label="Zoeken"
+            rows={4}
+          />
           <button type="button" className="sz-filterbtn" onClick={() => setFiltersOpen((v) => !v)}>
             Filters
             {actieveFilters.length > 0 && <span className="sz-filterdot" aria-hidden="true" />}
@@ -173,10 +178,13 @@ export function Header() {
           </span>
         </div>
 
-        {actieveFilters.length > 0 && (
+        {(actieveFilters.length > 0 || heeftVraag) && (
           <div className="sz-zoek-res" onClick={(e) => e.stopPropagation()}>
             <div className="sz-zoek-reshead">
-              <strong>{resultaten.length} resultaten met ...</strong>
+              <strong>
+                {resultaten.length} {resultaten.length === 1 ? "resultaat" : "resultaten"}
+                {actieveFilters.length > 0 ? " met ..." : ""}
+              </strong>
               {actieveFilters.map((label) => (
                 <button
                   key={label}
@@ -271,6 +279,12 @@ export function Header() {
                 );
               })}
             </div>
+            {resultaten.length === 0 && (
+              <p className="sz-zoek-leeg">
+                Niets gevonden. Probeer <strong>aanmelden</strong>, <strong>privacy</strong> of{" "}
+                <strong>gezin</strong> — of kies een filter.
+              </p>
+            )}
           </div>
         )}
 

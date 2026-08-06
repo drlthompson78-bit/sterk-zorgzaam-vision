@@ -2899,3 +2899,15 @@ body.sz-leaving {
     width: 100%;
   }
 }
+
+/* geen zoekresultaten */
+.sz-zoek-leeg {
+  margin: 18px 2px 0;
+  color: rgba(255, 253, 248, 0.72);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+.sz-zoek-leeg strong {
+  color: var(--sz-gold-light);
+  font-weight: 700;
+}

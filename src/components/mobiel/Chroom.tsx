@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { FadeLink } from "@/components/site/nav";
 import { ArrowLeft, ArrowRight, Close, Phone, Sparkle, User } from "@/components/site/icons";
-import { FGROEPEN, filterResultaten, useTypewriter } from "@/content/zoek";
+import { FGROEPEN, useTypewriter, zoeken } from "@/content/zoek";
 
 /*
  * Gedeelde onderdelen van de mobiele site: topbalk, menu, zoeken, inloggen en
@@ -153,7 +153,7 @@ export function MobielZoeken({ open, onSluiten }: { open: boolean; onSluiten: ()
   const [selectie, setSelectie] = useState<Record<string, boolean>>({});
   const [filtersOpen, setFiltersOpen] = useState(false);
   const placeholder = useTypewriter(open);
-  const { actief, resultaten } = filterResultaten(selectie, query);
+  const { actief, resultaten } = zoeken(selectie, query);
   const geenRes = (actief.length > 0 || query.trim().length >= 2) && resultaten.length === 0;
 
   const wissel = (label: string) => setSelectie((s) => ({ ...s, [label]: !s[label] }));
@@ -217,7 +217,10 @@ export function MobielZoeken({ open, onSluiten }: { open: boolean; onSluiten: ()
       {resultaten.length > 0 && (
         <div className="mz-zoek-resultaten" onClick={(e) => e.stopPropagation()}>
           <div className="mz-zoek-chips">
-            <strong>{resultaten.length} resultaten met ...</strong>
+            <strong>
+              {resultaten.length} {resultaten.length === 1 ? "resultaat" : "resultaten"}
+              {actief.length > 0 ? " met ..." : ""}
+            </strong>
             {actief.map((label) => (
               <button key={label} type="button" onClick={() => wissel(label)}>
                 {label} <Close stroke="#132a34" width={12} />
