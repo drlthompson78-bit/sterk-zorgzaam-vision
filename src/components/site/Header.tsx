@@ -1,16 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AnchorLink, FadeLink } from "./nav";
 import { FGROEPEN, ITEMS, useTypewriter } from "@/content/zoek";
-import {
-  ArrowLeft,
-  ArrowRight,
-  ChevronDown,
-  Close,
-  IconApple,
-  IconGoogle,
-  Sparkle,
-  User,
-} from "./icons";
+import { ArrowLeft, ArrowRight, ChevronDown, Close, Sparkle, User } from "./icons";
 
 const MENU_TEGELS = [
   { label: "Missie", hash: "missie", src: "/assets/menu-missie.jpg" },
@@ -22,7 +13,6 @@ const MENU_TEGELS = [
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [zoekOpen, setZoekOpen] = useState(false);
-  const [loginOpen, setLoginOpen] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [lijstweergave, setLijstweergave] = useState(false);
   const [selectie, setSelectie] = useState<Record<string, boolean>>({});
@@ -53,7 +43,6 @@ export function Header() {
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
       sluitZoek();
-      setLoginOpen(false);
       setMenuOpen(false);
     };
     window.addEventListener("keydown", onKey);
@@ -94,10 +83,10 @@ export function Header() {
               />
             </button>
           </nav>
-          <button type="button" className="sz-loginbtn" onClick={() => setLoginOpen(true)}>
+          <FadeLink to="/portaal" className="sz-loginbtn">
             <User stroke="#8a6420" width={17} />
             Inloggen
-          </button>
+          </FadeLink>
         </div>
 
         <FadeLink to="/aanmelden" className="sz-cta">
@@ -315,44 +304,6 @@ export function Header() {
               </div>
             </div>
           ))}
-        </div>
-      </div>
-
-      {/* ---------------------------------------------------------- inloggen */}
-      <div
-        className={`sz-overlay sz-login${loginOpen ? " is-open" : ""}`}
-        onClick={() => setLoginOpen(false)}
-      >
-        <div className="sz-login-kaart" onClick={(e) => e.stopPropagation()}>
-          <img src="/assets/logo.svg" alt="Sterk & Zorgzaam" />
-          <h2>Welkom</h2>
-          <p className="sz-login-sub">Log in om door te gaan.</p>
-          <label className="sz-login-label">
-            <span>E-mailadres</span>
-            <input type="email" autoComplete="email" />
-          </label>
-          <button type="button" className="sz-login-door">
-            Doorgaan
-          </button>
-          <div className="sz-login-of">
-            <span />
-            <span>of</span>
-            <span />
-          </div>
-          <div className="sz-login-social">
-            <button type="button">
-              <IconApple /> Doorgaan met Apple
-            </button>
-            <button type="button">
-              <IconGoogle /> Doorgaan met Google
-            </button>
-          </div>
-          <p className="sz-login-voet">
-            Geen account?{" "}
-            <FadeLink to="/aanmelden" onNavigate={() => setLoginOpen(false)}>
-              Meld je aan
-            </FadeLink>
-          </p>
         </div>
       </div>
     </>

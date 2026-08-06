@@ -1,15 +1,6 @@
 import { useEffect, useState } from "react";
 import { FadeLink } from "@/components/site/nav";
-import {
-  ArrowLeft,
-  ArrowRight,
-  Close,
-  IconApple,
-  IconGoogle,
-  Phone,
-  Sparkle,
-  User,
-} from "@/components/site/icons";
+import { ArrowLeft, ArrowRight, Close, Phone, Sparkle, User } from "@/components/site/icons";
 import { FGROEPEN, filterResultaten, useTypewriter } from "@/content/zoek";
 
 /*
@@ -39,12 +30,10 @@ export function MobielTopbar({
   variant = "home",
   onMenu,
   onZoek,
-  onLogin,
 }: {
   variant?: "home" | "terug";
   onMenu?: () => void;
   onZoek?: () => void;
-  onLogin?: () => void;
 }) {
   return (
     <header className="mz-topbar">
@@ -67,9 +56,9 @@ export function MobielTopbar({
 
       {variant === "home" ? (
         <div className="mz-topbar-acties">
-          <button type="button" onClick={onLogin} aria-label="Inloggen">
+          <FadeLink to="/portaal" aria-label="Inloggen" className="mz-icoonlink">
             <User stroke="#132a34" width={22} />
-          </button>
+          </FadeLink>
           <button type="button" onClick={onZoek} aria-label="Zoeken">
             <Sparkle color="#132a34" width={23} />
           </button>
@@ -156,60 +145,6 @@ export function MobielMenu({ open, onSluiten }: { open: boolean; onSluiten: () =
         )}
       </div>
     </nav>
-  );
-}
-
-export function MobielInloggen({ open, onSluiten }: { open: boolean; onSluiten: () => void }) {
-  return (
-    <div
-      className={`mz-login${open ? " is-open" : ""}`}
-      aria-hidden={!open}
-      role="dialog"
-      aria-label="Inloggen"
-    >
-      <div className="mz-paneel-kop">
-        <span className="mz-paneel-label">Inloggen</span>
-        <button type="button" onClick={onSluiten} aria-label="Sluiten" className="mz-paneel-sluit">
-          <Close stroke="#e8bd65" width={16} />
-        </button>
-      </div>
-      <img src="/assets/logo.svg" alt="Sterk & Zorgzaam" className="mz-login-logo" />
-      <h2>Welkom</h2>
-      <p className="mz-login-sub">Log in om door te gaan.</p>
-      <div className="mz-login-velden">
-        <label>
-          E-mailadres
-          <input type="email" inputMode="email" placeholder="naam@voorbeeld.nl" />
-        </label>
-        <label>
-          Wachtwoord
-          <input type="password" placeholder="••••••••" />
-        </label>
-        <button type="button" className="mz-knop-donker">
-          Inloggen
-          <ArrowRight stroke="#d3a142" width={16} />
-        </button>
-        <div className="mz-of">
-          <span />
-          <span className="mz-of-woord">of</span>
-          <span />
-        </div>
-        <button type="button" className="mz-knop-licht">
-          <IconApple />
-          Doorgaan met Apple
-        </button>
-        <button type="button" className="mz-knop-licht">
-          <IconGoogle />
-          Doorgaan met Google
-        </button>
-      </div>
-      <p className="mz-login-voet">
-        Geen account?{" "}
-        <FadeLink to="/aanmelden" onNavigate={onSluiten}>
-          Meld je aan
-        </FadeLink>
-      </p>
-    </div>
   );
 }
 
@@ -369,8 +304,7 @@ export function MobielZoeken({ open, onSluiten }: { open: boolean; onSluiten: ()
 export function MobielChroom({ variant = "home" }: { variant?: "home" | "terug" }) {
   const [menu, setMenu] = useState(false);
   const [zoek, setZoek] = useState(false);
-  const [login, setLogin] = useState(false);
-  const open = menu || zoek || login;
+  const open = menu || zoek;
 
   useEffect(() => {
     if (!open) return;
@@ -380,7 +314,6 @@ export function MobielChroom({ variant = "home" }: { variant?: "home" | "terug" 
       if (e.key !== "Escape") return;
       setMenu(false);
       setZoek(false);
-      setLogin(false);
     };
     window.addEventListener("keydown", opToets);
     return () => {
@@ -391,18 +324,9 @@ export function MobielChroom({ variant = "home" }: { variant?: "home" | "terug" 
 
   return (
     <>
-      <MobielTopbar
-        variant={variant}
-        onMenu={() => setMenu(true)}
-        onZoek={() => setZoek(true)}
-        onLogin={() => {
-          setMenu(false);
-          setLogin(true);
-        }}
-      />
+      <MobielTopbar variant={variant} onMenu={() => setMenu(true)} onZoek={() => setZoek(true)} />
       <MobielMenu open={menu} onSluiten={() => setMenu(false)} />
       <MobielZoeken open={zoek} onSluiten={() => setZoek(false)} />
-      <MobielInloggen open={login} onSluiten={() => setLogin(false)} />
     </>
   );
 }

@@ -3,6 +3,7 @@
 @import "tw-animate-css";
 @import "./site.css";
 @import "./mobiel.css";
+@import "./portaal.css";
 
 @custom-variant dark (&:is(.dark *));
 

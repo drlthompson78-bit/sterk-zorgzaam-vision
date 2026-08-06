@@ -9,10 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PortaalRouteImport } from './routes/portaal'
 import { Route as KwaliteitRouteImport } from './routes/kwaliteit'
 import { Route as AanmeldenRouteImport } from './routes/aanmelden'
 import { Route as IndexRouteImport } from './routes/index'
 
+const PortaalRoute = PortaalRouteImport.update({
+  id: '/portaal',
+  path: '/portaal',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const KwaliteitRoute = KwaliteitRouteImport.update({
   id: '/kwaliteit',
   path: '/kwaliteit',
@@ -33,34 +39,45 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/aanmelden': typeof AanmeldenRoute
   '/kwaliteit': typeof KwaliteitRoute
+  '/portaal': typeof PortaalRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/aanmelden': typeof AanmeldenRoute
   '/kwaliteit': typeof KwaliteitRoute
+  '/portaal': typeof PortaalRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/aanmelden': typeof AanmeldenRoute
   '/kwaliteit': typeof KwaliteitRoute
+  '/portaal': typeof PortaalRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/aanmelden' | '/kwaliteit'
+  fullPaths: '/' | '/aanmelden' | '/kwaliteit' | '/portaal'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/aanmelden' | '/kwaliteit'
-  id: '__root__' | '/' | '/aanmelden' | '/kwaliteit'
+  to: '/' | '/aanmelden' | '/kwaliteit' | '/portaal'
+  id: '__root__' | '/' | '/aanmelden' | '/kwaliteit' | '/portaal'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AanmeldenRoute: typeof AanmeldenRoute
   KwaliteitRoute: typeof KwaliteitRoute
+  PortaalRoute: typeof PortaalRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/portaal': {
+      id: '/portaal'
+      path: '/portaal'
+      fullPath: '/portaal'
+      preLoaderRoute: typeof PortaalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/kwaliteit': {
       id: '/kwaliteit'
       path: '/kwaliteit'
@@ -89,6 +106,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AanmeldenRoute: AanmeldenRoute,
   KwaliteitRoute: KwaliteitRoute,
+  PortaalRoute: PortaalRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

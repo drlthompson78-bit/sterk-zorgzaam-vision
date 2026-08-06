@@ -1,0 +1,419 @@
+/*
+ * Documentenportaal — afgeschermde omgeving voor auditors en beheerders.
+ * Zelfde huisstijl als de site, maar sober: het is een werkomgeving.
+ * Klassen beginnen met `pz-`. Werkt op telefoon en desktop met dezelfde opmaak.
+ */
+
+.pz-root {
+  min-height: 100vh;
+  background: #eae7e0;
+  color: #132a34;
+  font-family: -apple-system, "Helvetica Neue", "Segoe UI", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+.pz-root * {
+  box-sizing: border-box;
+}
+:where(.pz-root) a {
+  color: inherit;
+  text-decoration: none;
+}
+.pz-root button {
+  font: inherit;
+}
+
+.pz-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 18px clamp(16px, 4vw, 28px);
+}
+.pz-header img {
+  width: 84px;
+  height: 46px;
+  object-fit: contain;
+}
+.pz-headerrechts {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.pz-wie {
+  color: #647176;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.pz-wie b {
+  color: #8a6420;
+}
+.pz-uitloggen {
+  min-height: 40px;
+  padding: 0 18px;
+  color: #132a34;
+  background: transparent;
+  border: 1px solid rgba(19, 42, 52, 0.24);
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 200ms ease;
+}
+.pz-uitloggen:hover {
+  background: rgba(19, 42, 52, 0.06);
+}
+
+.pz-main {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 clamp(16px, 4vw, 28px) 64px;
+}
+
+.pz-eyebrow {
+  margin: 0 0 10px;
+  color: #8a6420;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.pz-root h1 {
+  margin: 0 0 10px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+.pz-sub {
+  margin: 0;
+  color: #647176;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* ------------------------------------------------------------- inloggen */
+
+.pz-inlogkaart {
+  max-width: 440px;
+  margin: clamp(20px, 6vh, 60px) auto;
+  padding: clamp(26px, 4vw, 40px);
+  background: #faf8f2;
+  border-radius: 26px;
+  box-shadow: 0 18px 44px rgba(19, 42, 52, 0.1);
+}
+.pz-inloglogo {
+  width: 92px;
+  height: 54px;
+  margin-bottom: 24px;
+  object-fit: contain;
+}
+.pz-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 24px;
+}
+.pz-form label,
+.pz-nieuwemap label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #647176;
+}
+.pz-form input {
+  width: 100%;
+  min-height: 52px;
+  padding: 14px 16px;
+  background: #fffdf8;
+  border: 1px solid rgba(19, 42, 52, 0.2);
+  border-radius: 14px;
+  font: inherit;
+  font-size: 16px;
+  color: #132a34;
+  letter-spacing: normal;
+  text-transform: none;
+  font-weight: 400;
+}
+.pz-form input:focus-visible,
+.pz-nieuwemap input:focus-visible {
+  outline: 2px solid #d3a142;
+  outline-offset: 2px;
+}
+.pz-knop-donker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px;
+  margin-top: 4px;
+  color: #fffdf8;
+  background: #132a34;
+  border: none;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 200ms ease;
+}
+.pz-knop-donker:hover:not(:disabled) {
+  background: #23404d;
+}
+.pz-knop-donker:disabled {
+  opacity: 0.65;
+  cursor: default;
+}
+.pz-knop-omlijnd {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px;
+  color: #132a34;
+  background: transparent;
+  border: 1px solid rgba(19, 42, 52, 0.24);
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.pz-knop-klein {
+  min-height: 44px;
+  padding: 0 20px;
+  font-size: 0.85rem;
+}
+.pz-tekstknop {
+  margin-top: 16px;
+  padding: 0;
+  color: #8a6420;
+  background: none;
+  border: none;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  border-bottom: 1px solid #d3a142;
+}
+.pz-voet {
+  margin: 22px 0 0;
+  color: #647176;
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+.pz-voet a {
+  color: #8a6420;
+  font-weight: 700;
+}
+.pz-fout {
+  margin: 0;
+  padding: 12px 16px;
+  background: rgba(180, 72, 47, 0.1);
+  border-radius: 12px;
+  color: #8f3925;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.pz-melding {
+  margin: 0;
+  padding: 12px 16px;
+  background: rgba(63, 125, 78, 0.12);
+  border-radius: 12px;
+  color: #2f5f3b;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------- bestandslijst */
+
+.pz-intro {
+  margin: clamp(8px, 2vw, 20px) 0 26px;
+}
+.pz-browser {
+  padding: clamp(18px, 3vw, 28px);
+  background: #faf8f2;
+  border-radius: 26px;
+}
+.pz-kruimels {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-bottom: 18px;
+  font-size: 0.85rem;
+}
+.pz-kruimels button {
+  padding: 6px 8px;
+  color: #647176;
+  background: none;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 8px;
+}
+.pz-kruimels button:hover {
+  color: #8a6420;
+}
+.pz-kruimels button.is-hier {
+  color: #132a34;
+  font-weight: 700;
+  cursor: default;
+}
+.pz-sep {
+  color: #d3a142;
+}
+
+.pz-beheer {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 18px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(19, 42, 52, 0.12);
+}
+.pz-nieuwemap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.pz-nieuwemap input {
+  min-height: 44px;
+  padding: 10px 14px;
+  background: #fffdf8;
+  border: 1px solid rgba(19, 42, 52, 0.2);
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.9rem;
+}
+.pz-nieuwemap button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: #d3a142;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.pz-nieuwemap button:last-child {
+  background: transparent;
+  border: 1px solid rgba(19, 42, 52, 0.2);
+}
+
+.pz-lijst {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pz-rij {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+  background: #f3efe6;
+  border-radius: 16px;
+  overflow: hidden;
+}
+.pz-rij--terug {
+  background: transparent;
+}
+.pz-rijknop {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+  min-width: 0;
+  min-height: 60px;
+  padding: 12px 18px;
+  text-align: left;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background 180ms ease;
+}
+.pz-rijknop:hover {
+  background: rgba(211, 161, 66, 0.12);
+}
+.pz-icoon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  flex: none;
+}
+.pz-icoon svg {
+  width: 22px;
+}
+.pz-naam {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+.pz-meta {
+  flex: none;
+  color: #647176;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+.pz-download {
+  flex: none;
+  padding: 7px 14px;
+  background: #132a34;
+  border-radius: 999px;
+  color: #fffdf8;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.pz-verwijder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  flex: none;
+  background: transparent;
+  border: none;
+  border-left: 1px solid rgba(19, 42, 52, 0.1);
+  cursor: pointer;
+}
+.pz-verwijder:hover {
+  background: rgba(180, 72, 47, 0.1);
+}
+.pz-leeg {
+  margin: 18px 2px;
+  color: #647176;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 620px) {
+  .pz-meta {
+    display: none;
+  }
+  .pz-rijknop {
+    gap: 12px;
+    padding: 12px 14px;
+  }
+  .pz-download {
+    padding: 6px 10px;
+    font-size: 0.56rem;
+  }
+}
