@@ -109,10 +109,10 @@ function Interview({
               </span>
               <Phone stroke="#8a6420" width={20} />
             </a>
-            <a href="mailto:info@sterkzorgzaam.nl" className="sz-contactkaartje">
+            <a href="mailto:hallo@sterkzorgzaam.nl" className="sz-contactkaartje">
               <span>
                 <b>Of stuur een mail</b>
-                <i>info@sterkzorgzaam.nl</i>
+                <i>hallo@sterkzorgzaam.nl</i>
               </span>
               <Mail stroke="#8a6420" width={20} />
             </a>

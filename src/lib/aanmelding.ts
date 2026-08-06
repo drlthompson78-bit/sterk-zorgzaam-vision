@@ -124,7 +124,7 @@ export function bouwMailto(g: Aanmeldgegevens) {
   ].filter((r): r is string => r !== null);
 
   return (
-    "mailto:info@sterkzorgzaam.nl?subject=" +
+    "mailto:hallo@sterkzorgzaam.nl?subject=" +
     encodeURIComponent(`Aanmelding — ${g.voornaam || "nieuwe jongere"} (${g.urgentie})`) +
     "&body=" +
     encodeURIComponent(regels.join("\n"))

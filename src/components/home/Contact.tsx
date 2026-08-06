@@ -106,8 +106,8 @@ export function Contact() {
               <Phone stroke="#0d2028" width={19} />
             </a>
             <a
-              href="mailto:info@sterkzorgzaam.nl"
-              aria-label="Mail info@sterkzorgzaam.nl"
+              href="mailto:hallo@sterkzorgzaam.nl"
+              aria-label="Mail hallo@sterkzorgzaam.nl"
               title="Mail ons"
               className="sz-rond-goud"
             >

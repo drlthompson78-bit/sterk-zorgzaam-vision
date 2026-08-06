@@ -91,8 +91,8 @@ const RIJEN = [
 ];
 
 const Mail = () => (
-  <a href="mailto:info@sterkzorgzaam.nl" className="mz-mail">
-    info@sterkzorgzaam.nl
+  <a href="mailto:hallo@sterkzorgzaam.nl" className="mz-mail">
+    hallo@sterkzorgzaam.nl
   </a>
 );
 
@@ -204,7 +204,7 @@ export function MobielKwaliteit() {
         <p className="mz-kw-voet-kop">Wij denken graag mee.</p>
         <div className="mz-kw-voet-knoppen">
           <a href="tel:+31628873094">Bellen</a>
-          <a href="mailto:info@sterkzorgzaam.nl">Mailen</a>
+          <a href="mailto:hallo@sterkzorgzaam.nl">Mailen</a>
         </div>
         <p className="mz-copy">© 2026 Samen Sterk &amp; Zorgzaam B.V.</p>
       </section>

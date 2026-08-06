@@ -221,10 +221,10 @@ function Interview({
           </span>
           <Phone stroke="#8a6420" width={19} />
         </a>
-        <a href="mailto:info@sterkzorgzaam.nl">
+        <a href="mailto:hallo@sterkzorgzaam.nl">
           <span>
             <b>Of stuur een mail</b>
-            <i>info@sterkzorgzaam.nl</i>
+            <i>hallo@sterkzorgzaam.nl</i>
           </span>
           <Mail stroke="#8a6420" width={19} />
         </a>
@@ -570,7 +570,7 @@ export function MobielHome() {
             <Phone stroke="#d3a142" width={22} />
             <span>Bellen</span>
           </a>
-          <a href="mailto:info@sterkzorgzaam.nl">
+          <a href="mailto:hallo@sterkzorgzaam.nl">
             <Mail stroke="#d3a142" width={22} />
             <span>Mailen</span>
           </a>

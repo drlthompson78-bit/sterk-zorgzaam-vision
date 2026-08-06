@@ -179,7 +179,7 @@ export const ITEMS: Resultaat[] = [
     tekst: "Adres, telefoon, mail en onze bereikbaarheid.",
     hash: "contact",
     inhoud:
-      "Contact, bezoek en bereikbaarheid. Graze Weitje 22, 3077 BM Rotterdam. Telefoon 06 288 730 94, mail info@sterkzorgzaam.nl. Route, adres, bezoekadres en locatie: waar zitten wij en hoe kom ik er. Aanmelden of eerst kennismaken, wij denken graag mee. Bereikbaarheid, openingstijden, afspraak maken. Samen werken aan duurzaam perspectief.",
+      "Contact, bezoek en bereikbaarheid. Graze Weitje 22, 3077 BM Rotterdam. Telefoon 06 288 730 94, mail hallo@sterkzorgzaam.nl. Route, adres, bezoekadres en locatie: waar zitten wij en hoe kom ik er. Aanmelden of eerst kennismaken, wij denken graag mee. Bereikbaarheid, openingstijden, afspraak maken. Samen werken aan duurzaam perspectief.",
     tags: ["Contact"],
   },
 ];

@@ -137,7 +137,7 @@ function Kwaliteit() {
               </p>
               <p>
                 <strong>Jouw rechten</strong> — inzage, correctie of verwijdering vraag je aan via{" "}
-                <a href="mailto:info@sterkzorgzaam.nl">info@sterkzorgzaam.nl</a>. Wij reageren
+                <a href="mailto:hallo@sterkzorgzaam.nl">hallo@sterkzorgzaam.nl</a>. Wij reageren
                 binnen vier weken.
               </p>
             </div>
@@ -198,7 +198,7 @@ function Kwaliteit() {
               </p>
               <p>
                 <strong>2. Dien een klacht in</strong> — schriftelijk via{" "}
-                <a href="mailto:info@sterkzorgzaam.nl">info@sterkzorgzaam.nl</a>. Je ontvangt binnen
+                <a href="mailto:hallo@sterkzorgzaam.nl">hallo@sterkzorgzaam.nl</a>. Je ontvangt binnen
                 vijf werkdagen een reactie en we plannen een gesprek.
               </p>
               <p>
@@ -243,7 +243,7 @@ function Kwaliteit() {
             </p>
             <p>
               Ontbreekt er informatie of klopt er iets niet? Laat het ons weten: mail naar{" "}
-              <a href="mailto:info@sterkzorgzaam.nl">info@sterkzorgzaam.nl</a>.
+              <a href="mailto:hallo@sterkzorgzaam.nl">hallo@sterkzorgzaam.nl</a>.
             </p>
           </div>
         </section>

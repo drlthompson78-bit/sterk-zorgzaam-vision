@@ -178,7 +178,7 @@ export function PortaalInloggen() {
 
       <p className="pz-voet">
         Geen account? Accounts worden op uitnodiging aangemaakt. Mail{" "}
-        <a href="mailto:info@sterkzorgzaam.nl">info@sterkzorgzaam.nl</a>.
+        <a href="mailto:hallo@sterkzorgzaam.nl">hallo@sterkzorgzaam.nl</a>.
       </p>
     </div>
   );
