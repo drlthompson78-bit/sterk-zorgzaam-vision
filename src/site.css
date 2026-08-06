@@ -244,6 +244,9 @@ body.sz-leaving {
   min-height: 52px;
   padding: 0 28px;
   background: var(--sz-ink);
+  min-height: 52px;
+  padding: 0 28px;
+  background: var(--sz-ink);
   color: var(--sz-on-dark);
   font-size: 0.82rem;
   font-weight: 700;
