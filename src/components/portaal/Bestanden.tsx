@@ -42,6 +42,7 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
   const [nieuweMap, setNieuweMap] = useState<string | null>(null);
   const [uploadBezig, setUploadBezig] = useState(false);
   const bestandKiezer = useRef<HTMLInputElement>(null);
+  const mapKiezer = useRef<HTMLInputElement>(null);
 
   const laden = useCallback(async () => {
     if (!supabase) return;
@@ -84,21 +85,26 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
     window.location.href = data.signedUrl;
   };
 
-  const uploaden = async (lijst: FileList | null) => {
+  const uploaden = async (lijst: FileList | null, metMappen = false) => {
     if (!supabase || !lijst || lijst.length === 0) return;
     setUploadBezig(true);
     setFout("");
     for (const bestand of Array.from(lijst)) {
+      /* Bij een hele map uploaden houden we de mappenstructuur intact. */
+      const relatief = metMappen
+        ? ((bestand as File & { webkitRelativePath?: string }).webkitRelativePath || bestand.name)
+        : bestand.name;
       const { error } = await supabase.storage
         .from(BUCKET)
-        .upload(volledigPad(bestand.name), bestand, { upsert: true });
+        .upload(volledigPad(relatief), bestand, { upsert: true });
       if (error) {
-        setFout(`"${bestand.name}" kon niet worden geüpload: ${error.message}`);
+        setFout(`"${relatief}" kon niet worden geüpload: ${error.message}`);
         break;
       }
     }
     setUploadBezig(false);
     if (bestandKiezer.current) bestandKiezer.current.value = "";
+    if (mapKiezer.current) mapKiezer.current.value = "";
     laden();
   };
 
@@ -185,6 +191,24 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
             multiple
             hidden
             onChange={(e) => uploaden(e.target.files)}
+          />
+          <button
+            type="button"
+            className="pz-knop-omlijnd pz-knop-klein"
+            onClick={() => mapKiezer.current?.click()}
+            disabled={uploadBezig}
+          >
+            Map uploaden
+          </button>
+          <input
+            ref={mapKiezer}
+            type="file"
+            multiple
+            hidden
+            /* @ts-expect-error niet-standaard maar breed ondersteund attribuut */
+            webkitdirectory=""
+            directory=""
+            onChange={(e) => uploaden(e.target.files, true)}
           />
           {nieuweMap === null ? (
             <button
