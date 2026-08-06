@@ -48,6 +48,9 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
   const [mapStats, setMapStats] = useState<Record<string, { aantal: number; bytes: number }>>({});
   const [hernoemDoel, setHernoemDoel] = useState<{ naam: string; isMap: boolean } | null>(null);
   const [hernoemNaam, setHernoemNaam] = useState("");
+  const [keuze, setKeuze] = useState<Item | null>(null);
+  const [bekijk, setBekijk] = useState<{ naam: string; url: string; type: string } | null>(null);
+  const [bekijkBezig, setBekijkBezig] = useState(false);
   const bestandKiezer = useRef<HTMLInputElement>(null);
   const mapKiezer = useRef<HTMLInputElement>(null);
 
@@ -135,6 +138,35 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
     /* Vastleggen wie wat ophaalt — bewijs voor de audit. */
     await supabase.from("downloadlog").insert({ gebruiker: session.user.id, pad: doelPad });
     window.location.href = data.signedUrl;
+  };
+
+  /* Bekijken: dezelfde tijdelijke koppeling, maar zonder download-vlag zodat
+     de browser het bestand in beeld toont in plaats van op te slaan. */
+  const bekijken = async (bestand: Item) => {
+    if (!supabase) return;
+    setBekijkBezig(true);
+    const doelPad = volledigPad(bestand.name);
+    const { data, error } = await supabase.storage.from(BUCKET).createSignedUrl(doelPad, 600);
+    setBekijkBezig(false);
+    if (error || !data) {
+      setFout("Het bestand kon niet worden geopend.");
+      return;
+    }
+    const naam = bestand.name.toLowerCase();
+    const mime = bestand.metadata?.mimetype ?? "";
+    const type = mime.startsWith("image/") || /\.(png|jpe?g|gif|webp|svg|avif)$/.test(naam)
+      ? "afbeelding"
+      : mime.startsWith("video/") || /\.(mp4|webm|mov)$/.test(naam)
+        ? "video"
+        : mime.startsWith("audio/") || /\.(mp3|wav|m4a|ogg)$/.test(naam)
+          ? "audio"
+          : mime === "application/pdf" || naam.endsWith(".pdf")
+            ? "pdf"
+            : mime.startsWith("text/") || /\.(txt|csv|md|json|log)$/.test(naam)
+              ? "tekst"
+              : "onbekend";
+    setKeuze(null);
+    setBekijk({ naam: bestand.name, url: data.signedUrl, type });
   };
 
   const wisselSelectie = (naam: string) => {
@@ -370,6 +402,74 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
 
   return (
     <div className="pz-browser">
+      {keuze && (
+        <div className="pz-overlay" role="dialog" aria-modal="true" onClick={() => setKeuze(null)}>
+          <div className="pz-keuze" onClick={(e) => e.stopPropagation()}>
+            <h3>{keuze.name}</h3>
+            <p>Wat wil je met dit bestand doen?</p>
+            <div className="pz-keuzeknoppen">
+              <button
+                type="button"
+                className="pz-knop-donker pz-knop-klein"
+                onClick={() => bekijken(keuze)}
+                disabled={bekijkBezig}
+              >
+                {bekijkBezig ? "Bezig met openen…" : "Bekijken"}
+              </button>
+              <button
+                type="button"
+                className="pz-knop-omlijnd pz-knop-klein"
+                onClick={() => {
+                  const naam = keuze.name;
+                  setKeuze(null);
+                  downloaden(naam);
+                }}
+              >
+                Downloaden
+              </button>
+              <button type="button" className="pz-keuzeannuleer" onClick={() => setKeuze(null)}>
+                Annuleren
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {bekijk && (
+        <div className="pz-overlay" role="dialog" aria-modal="true" onClick={() => setBekijk(null)}>
+          <div className="pz-viewer" onClick={(e) => e.stopPropagation()}>
+            <header>
+              <span className="pz-naam">{bekijk.naam}</span>
+              <button
+                type="button"
+                className="pz-knop-omlijnd pz-knop-klein"
+                onClick={() => downloaden(bekijk.naam)}
+              >
+                Downloaden
+              </button>
+              <button type="button" onClick={() => setBekijk(null)} aria-label="Sluiten">
+                <Close stroke="#132a34" width={16} />
+              </button>
+            </header>
+            <div className="pz-viewervlak">
+              {bekijk.type === "afbeelding" ? (
+                <img src={bekijk.url} alt={bekijk.naam} />
+              ) : bekijk.type === "video" ? (
+                <video src={bekijk.url} controls />
+              ) : bekijk.type === "audio" ? (
+                <audio src={bekijk.url} controls />
+              ) : bekijk.type === "onbekend" ? (
+                <p className="pz-leeg">
+                  Dit bestandstype kan niet in beeld worden getoond. Download het om te openen.
+                </p>
+              ) : (
+                <iframe src={bekijk.url} title={bekijk.naam} />
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="pz-kruimels">
         <button type="button" onClick={() => setPad("")} className={pad ? undefined : "is-hier"}>
           Documenten
@@ -603,7 +703,7 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
                   aria-label={`${bestand.name} selecteren`}
                 />
               </label>
-              <button type="button" onClick={() => downloaden(bestand.name)} className="pz-rijknop">
+              <button type="button" onClick={() => setKeuze(bestand)} className="pz-rijknop">
                 <span className="pz-icoon" aria-hidden="true">
                   <svg viewBox="0 0 24 24" fill="none" stroke="#8a6420" strokeWidth={1.7}>
                     <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
@@ -615,7 +715,7 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
                   {leesbaarFormaat(bestand.metadata?.size)}
                   {bestand.updated_at && ` · ${leesbaarDatum(bestand.updated_at)}`}
                 </span>
-                <span className="pz-download">Downloaden</span>
+                <span className="pz-download">Openen</span>
               </button>
               {beheerder && (
                 <>
