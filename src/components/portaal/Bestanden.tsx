@@ -41,6 +41,8 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
   const [fout, setFout] = useState("");
   const [nieuweMap, setNieuweMap] = useState<string | null>(null);
   const [uploadBezig, setUploadBezig] = useState(false);
+  const [selectie, setSelectie] = useState<string[]>([]);
+  const [zipBezig, setZipBezig] = useState(false);
   const bestandKiezer = useRef<HTMLInputElement>(null);
   const mapKiezer = useRef<HTMLInputElement>(null);
 
@@ -64,6 +66,11 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
     laden();
   }, [laden]);
 
+  /* Bij wisselen van map vervalt de selectie. */
+  useEffect(() => {
+    setSelectie([]);
+  }, [pad]);
+
   const mappen = items.filter((i) => i.id === null);
   const bestanden = items.filter((i) => i.id !== null);
   const kruimels = pad ? pad.split("/") : [];
@@ -83,6 +90,42 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
     /* Vastleggen wie wat ophaalt — bewijs voor de audit. */
     await supabase.from("downloadlog").insert({ gebruiker: session.user.id, pad: doelPad });
     window.location.href = data.signedUrl;
+  };
+
+  const wisselSelectie = (naam: string) => {
+    setSelectie((huidig) =>
+      huidig.includes(naam) ? huidig.filter((n) => n !== naam) : [...huidig, naam],
+    );
+  };
+
+  /* Meerdere bestanden gaan als één zip-bestand mee, zodat de browser
+     niet meerdere downloads tegelijk hoeft te blokkeren. */
+  const selectieDownloaden = async () => {
+    if (!supabase || selectie.length === 0) return;
+    setZipBezig(true);
+    setFout("");
+    try {
+      const JSZip = (await import("jszip")).default;
+      const zip = new JSZip();
+      for (const naam of selectie) {
+        const doelPad = volledigPad(naam);
+        const { data, error } = await supabase.storage.from(BUCKET).download(doelPad);
+        if (error || !data) throw new Error(naam);
+        zip.file(naam, data);
+        await supabase.from("downloadlog").insert({ gebruiker: session.user.id, pad: doelPad });
+      }
+      const inhoud = await zip.generateAsync({ type: "blob" });
+      const url = URL.createObjectURL(inhoud);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${pad ? pad.split("/").pop() : "documenten"}.zip`;
+      link.click();
+      URL.revokeObjectURL(url);
+      setSelectie([]);
+    } catch {
+      setFout("Niet alle bestanden konden worden opgehaald. Probeer het opnieuw.");
+    }
+    setZipBezig(false);
   };
 
   const uploaden = async (lijst: FileList | null, metMappen = false) => {
@@ -247,6 +290,30 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
         </p>
       )}
 
+      {bestanden.length > 0 && (
+        <div className="pz-selectiebalk">
+          <label className="pz-selectall">
+            <input
+              type="checkbox"
+              checked={selectie.length === bestanden.length}
+              onChange={(e) => setSelectie(e.target.checked ? bestanden.map((b) => b.name) : [])}
+            />
+            Alles selecteren
+          </label>
+          <span className="pz-selectietelling">
+            {selectie.length > 0 ? `${selectie.length} geselecteerd` : ""}
+          </span>
+          <button
+            type="button"
+            className="pz-knop-donker pz-knop-klein"
+            onClick={selectieDownloaden}
+            disabled={selectie.length === 0 || zipBezig}
+          >
+            {zipBezig ? "Bezig met inpakken…" : "Selectie downloaden (zip)"}
+          </button>
+        </div>
+      )}
+
       {bezig ? (
         <p className="pz-leeg">Bezig met laden…</p>
       ) : items.length === 0 ? (
@@ -300,6 +367,14 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
 
           {bestanden.map((bestand) => (
             <li key={bestand.name} className="pz-rij">
+              <label className="pz-vink" onClick={(e) => e.stopPropagation()}>
+                <input
+                  type="checkbox"
+                  checked={selectie.includes(bestand.name)}
+                  onChange={() => wisselSelectie(bestand.name)}
+                  aria-label={`${bestand.name} selecteren`}
+                />
+              </label>
               <button type="button" onClick={() => downloaden(bestand.name)} className="pz-rijknop">
                 <span className="pz-icoon" aria-hidden="true">
                   <svg viewBox="0 0 24 24" fill="none" stroke="#8a6420" strokeWidth={1.7}>
