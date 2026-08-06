@@ -1,0 +1,1 @@
+GRANT EXECUTE ON FUNCTION prive.is_portaallid() TO authenticated;
