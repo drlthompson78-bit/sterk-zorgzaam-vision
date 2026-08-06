@@ -33,6 +33,21 @@ export const Route = createFileRoute("/api/public/d/$code")({
           return new Response("Het bestand kon niet worden opgehaald.", { status: 500 });
         }
 
+        /* Vastleggen dát de koppeling gebruikt is. Zonder inloggen weten we
+           niet wie het ophaalde, maar wél welk document wanneer — dat is wat
+           een auditor moet kunnen zien. Mislukt het logboek, dan mag de
+           download daar niet op stuklopen. */
+        try {
+          /* De typedefinities worden opnieuw gegenereerd zodra de migratie is
+             uitgevoerd; tot die tijd kent dit bestand de tabel nog niet. */
+          const logboek = supabaseAdmin as unknown as {
+            from: (tabel: string) => { insert: (waarde: unknown) => Promise<unknown> };
+          };
+          await logboek.from("deellink_gebruik").insert({ code: params.code, pad: link.pad });
+        } catch {
+          /* logboek nog niet aangemaakt: geen reden om de download te blokkeren */
+        }
+
         return new Response(null, { status: 302, headers: { Location: data.signedUrl } });
       },
     },

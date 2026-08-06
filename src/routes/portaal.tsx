@@ -5,6 +5,7 @@ import { FadeLink } from "@/components/site/nav";
 import { PortaalInloggen } from "@/components/portaal/Inloggen";
 import { Bestanden } from "@/components/portaal/Bestanden";
 import { Gebruikers } from "@/components/portaal/Gebruikers";
+import { Deellinks } from "@/components/portaal/Deellinks";
 import { supabase } from "@/lib/supabase";
 
 export const Route = createFileRoute("/portaal")({
@@ -23,7 +24,7 @@ function Portaal() {
   const [naam, setNaam] = useState("");
   const [beheerder, setBeheerder] = useState(false);
   const [geladen, setGeladen] = useState(false);
-  const [tab, setTab] = useState<"documenten" | "gebruikers">("documenten");
+  const [tab, setTab] = useState<"documenten" | "gebruikers" | "deellinks">("documenten");
 
   /* Sessie ophalen en blijven volgen (in- en uitloggen, verlopen sessie). */
   useEffect(() => {
@@ -96,11 +97,19 @@ function Portaal() {
           <>
             <div className="pz-intro">
               <p className="pz-eyebrow">Documentenportaal</p>
-              <h1>{tab === "gebruikers" ? "Gebruikers" : "Documenten"}</h1>
+              <h1>
+                {tab === "gebruikers"
+                  ? "Gebruikers"
+                  : tab === "deellinks"
+                    ? "Deelkoppelingen"
+                    : "Documenten"}
+              </h1>
               <p className="pz-sub">
                 {tab === "gebruikers"
                   ? "Accounts uitnodigen, rollen wisselen en toegang intrekken."
-                  : "Kwaliteitsdocumentatie van Sterk & Zorgzaam. Downloads worden vastgelegd."}
+                  : tab === "deellinks"
+                    ? "Openbare koppelingen: wat loopt er, hoe vaak is het opgehaald, en intrekken."
+                    : "Kwaliteitsdocumentatie van Sterk & Zorgzaam. Downloads worden vastgelegd."}
               </p>
             </div>
             {beheerder && (
@@ -119,10 +128,19 @@ function Portaal() {
                 >
                   Gebruikers
                 </button>
+                <button
+                  type="button"
+                  className={tab === "deellinks" ? "is-hier" : undefined}
+                  onClick={() => setTab("deellinks")}
+                >
+                  Deelkoppelingen
+                </button>
               </div>
             )}
             {beheerder && tab === "gebruikers" ? (
               <Gebruikers eigenId={session.user.id} />
+            ) : beheerder && tab === "deellinks" ? (
+              <Deellinks />
             ) : (
               <Bestanden session={session} beheerder={beheerder} />
             )}

@@ -154,17 +154,18 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
     }
     const naam = bestand.name.toLowerCase();
     const mime = bestand.metadata?.mimetype ?? "";
-    const type = mime.startsWith("image/") || /\.(png|jpe?g|gif|webp|svg|avif)$/.test(naam)
-      ? "afbeelding"
-      : mime.startsWith("video/") || /\.(mp4|webm|mov)$/.test(naam)
-        ? "video"
-        : mime.startsWith("audio/") || /\.(mp3|wav|m4a|ogg)$/.test(naam)
-          ? "audio"
-          : mime === "application/pdf" || naam.endsWith(".pdf")
-            ? "pdf"
-            : mime.startsWith("text/") || /\.(txt|csv|md|json|log)$/.test(naam)
-              ? "tekst"
-              : "onbekend";
+    const type =
+      mime.startsWith("image/") || /\.(png|jpe?g|gif|webp|svg|avif)$/.test(naam)
+        ? "afbeelding"
+        : mime.startsWith("video/") || /\.(mp4|webm|mov)$/.test(naam)
+          ? "video"
+          : mime.startsWith("audio/") || /\.(mp3|wav|m4a|ogg)$/.test(naam)
+            ? "audio"
+            : mime === "application/pdf" || naam.endsWith(".pdf")
+              ? "pdf"
+              : mime.startsWith("text/") || /\.(txt|csv|md|json|log)$/.test(naam)
+                ? "tekst"
+                : "onbekend";
     setKeuze(null);
     setBekijk({ naam: bestand.name, url: data.signedUrl, type });
   };
@@ -212,7 +213,9 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
     setFout("");
     const links: string[] = [];
     for (const naam of selectie) {
-      const code = Array.from(crypto.getRandomValues(new Uint8Array(5)))
+      /* Zestien tekens uit 32 mogelijkheden: te veel om te raden, ook als
+         iemand systematisch codes afgaat. */
+      const code = Array.from(crypto.getRandomValues(new Uint8Array(16)))
         .map((n) => "abcdefghijkmnpqrstuvwxyz23456789"[n % 32])
         .join("");
       const { error } = await supabase.from("deellinks").insert({
@@ -229,9 +232,7 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
     try {
       await navigator.clipboard.writeText(links.join("\n"));
       const tekst =
-        selectie.length > 1
-          ? `${selectie.length} koppelingen gekopieerd`
-          : "Koppeling gekopieerd";
+        selectie.length > 1 ? `${selectie.length} koppelingen gekopieerd` : "Koppeling gekopieerd";
       toast.success(tekst, {
         description: "Plak de link om te delen — 7 dagen geldig.",
       });
@@ -258,7 +259,7 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
     for (const bestand of Array.from(lijst)) {
       /* Bij een hele map uploaden houden we de mappenstructuur intact. */
       const relatief = metMappen
-        ? ((bestand as File & { webkitRelativePath?: string }).webkitRelativePath || bestand.name)
+        ? (bestand as File & { webkitRelativePath?: string }).webkitRelativePath || bestand.name
         : bestand.name;
       const { error } = await supabase.storage
         .from(BUCKET)
@@ -576,18 +577,22 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
 
           <span className="pz-actiescheiding" aria-hidden="true" />
 
-          <button
-            type="button"
-            className="pz-actie"
-            onClick={koppelingKopieren}
-            disabled={selectie.length === 0}
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7}>
-              <path d="M10 13a5 5 0 0 0 7.1 0l3-3a5 5 0 0 0-7.1-7.1L11.3 4.6" />
-              <path d="M14 11a5 5 0 0 0-7.1 0l-3 3a5 5 0 0 0 7.1 7.1l1.7-1.7" />
-            </svg>
-            Delen
-          </button>
+          {/* Delen maakt een koppeling die zonder inloggen werkt; dat blijft
+              een beheerdersbeslissing. */}
+          {beheerder && (
+            <button
+              type="button"
+              className="pz-actie"
+              onClick={koppelingKopieren}
+              disabled={selectie.length === 0}
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7}>
+                <path d="M10 13a5 5 0 0 0 7.1 0l3-3a5 5 0 0 0-7.1-7.1L11.3 4.6" />
+                <path d="M14 11a5 5 0 0 0-7.1 0l-3 3a5 5 0 0 0 7.1 7.1l1.7-1.7" />
+              </svg>
+              Delen
+            </button>
+          )}
 
           <button
             type="button"
@@ -651,39 +656,39 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
                 hernoemVeld
               ) : (
                 <>
-              <button
-                type="button"
-                onClick={() => setPad(volledigPad(map.name))}
-                className="pz-rijknop"
-              >
-                <span className="pz-icoon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#d3a142" strokeWidth={1.7}>
-                    <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                  </svg>
-                </span>
-                <span className="pz-naam">{map.name}</span>
-                <span className="pz-meta">
-                  {mapStats[volledigPad(map.name)]
-                    ? `${mapStats[volledigPad(map.name)]!.aantal} bestand${
-                        mapStats[volledigPad(map.name)]!.aantal === 1 ? "" : "en"
-                      } · ${leesbaarFormaat(mapStats[volledigPad(map.name)]!.bytes)}`
-                    : "Map"}
-                </span>
-                <ArrowRight stroke="#8a6420" width={14} />
-              </button>
-              {beheerder && (
-                <>
-                  {potloodKnop(map.name, true)}
                   <button
-                  type="button"
-                  className="pz-verwijder"
-                  onClick={() => verwijderen(map.name, true)}
-                  aria-label={`Map ${map.name} verwijderen`}
-                >
-                  <Close stroke="#b4482f" width={14} />
-                </button>
-                </>
-              )}
+                    type="button"
+                    onClick={() => setPad(volledigPad(map.name))}
+                    className="pz-rijknop"
+                  >
+                    <span className="pz-icoon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="#d3a142" strokeWidth={1.7}>
+                        <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                      </svg>
+                    </span>
+                    <span className="pz-naam">{map.name}</span>
+                    <span className="pz-meta">
+                      {mapStats[volledigPad(map.name)]
+                        ? `${mapStats[volledigPad(map.name)]!.aantal} bestand${
+                            mapStats[volledigPad(map.name)]!.aantal === 1 ? "" : "en"
+                          } · ${leesbaarFormaat(mapStats[volledigPad(map.name)]!.bytes)}`
+                        : "Map"}
+                    </span>
+                    <ArrowRight stroke="#8a6420" width={14} />
+                  </button>
+                  {beheerder && (
+                    <>
+                      {potloodKnop(map.name, true)}
+                      <button
+                        type="button"
+                        className="pz-verwijder"
+                        onClick={() => verwijderen(map.name, true)}
+                        aria-label={`Map ${map.name} verwijderen`}
+                      >
+                        <Close stroke="#b4482f" width={14} />
+                      </button>
+                    </>
+                  )}
                 </>
               )}
             </li>
@@ -695,41 +700,41 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
                 hernoemVeld
               ) : (
                 <>
-              <label className="pz-vink" onClick={(e) => e.stopPropagation()}>
-                <input
-                  type="checkbox"
-                  checked={selectie.includes(bestand.name)}
-                  onChange={() => wisselSelectie(bestand.name)}
-                  aria-label={`${bestand.name} selecteren`}
-                />
-              </label>
-              <button type="button" onClick={() => setKeuze(bestand)} className="pz-rijknop">
-                <span className="pz-icoon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#8a6420" strokeWidth={1.7}>
-                    <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
-                    <path d="M14 3v5h5" />
-                  </svg>
-                </span>
-                <span className="pz-naam">{bestand.name}</span>
-                <span className="pz-meta">
-                  {leesbaarFormaat(bestand.metadata?.size)}
-                  {bestand.updated_at && ` · ${leesbaarDatum(bestand.updated_at)}`}
-                </span>
-                <span className="pz-download">Openen</span>
-              </button>
-              {beheerder && (
-                <>
-                  {potloodKnop(bestand.name, false)}
-                  <button
-                  type="button"
-                  className="pz-verwijder"
-                  onClick={() => verwijderen(bestand.name, false)}
-                  aria-label={`${bestand.name} verwijderen`}
-                >
-                  <Close stroke="#b4482f" width={14} />
-                </button>
-                </>
-              )}
+                  <label className="pz-vink" onClick={(e) => e.stopPropagation()}>
+                    <input
+                      type="checkbox"
+                      checked={selectie.includes(bestand.name)}
+                      onChange={() => wisselSelectie(bestand.name)}
+                      aria-label={`${bestand.name} selecteren`}
+                    />
+                  </label>
+                  <button type="button" onClick={() => setKeuze(bestand)} className="pz-rijknop">
+                    <span className="pz-icoon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="#8a6420" strokeWidth={1.7}>
+                        <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" />
+                        <path d="M14 3v5h5" />
+                      </svg>
+                    </span>
+                    <span className="pz-naam">{bestand.name}</span>
+                    <span className="pz-meta">
+                      {leesbaarFormaat(bestand.metadata?.size)}
+                      {bestand.updated_at && ` · ${leesbaarDatum(bestand.updated_at)}`}
+                    </span>
+                    <span className="pz-download">Openen</span>
+                  </button>
+                  {beheerder && (
+                    <>
+                      {potloodKnop(bestand.name, false)}
+                      <button
+                        type="button"
+                        className="pz-verwijder"
+                        onClick={() => verwijderen(bestand.name, false)}
+                        aria-label={`${bestand.name} verwijderen`}
+                      >
+                        <Close stroke="#b4482f" width={14} />
+                      </button>
+                    </>
+                  )}
                 </>
               )}
             </li>
