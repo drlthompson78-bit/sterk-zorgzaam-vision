@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      deellinks: {
+        Row: {
+          aangemaakt_door: string
+          code: string
+          created_at: string
+          id: string
+          pad: string
+          updated_at: string
+          vervalt: string
+        }
+        Insert: {
+          aangemaakt_door?: string
+          code: string
+          created_at?: string
+          id?: string
+          pad: string
+          updated_at?: string
+          vervalt?: string
+        }
+        Update: {
+          aangemaakt_door?: string
+          code?: string
+          created_at?: string
+          id?: string
+          pad?: string
+          updated_at?: string
+          vervalt?: string
+        }
+        Relationships: []
+      }
       downloadlog: {
         Row: {
           gebruiker: string
