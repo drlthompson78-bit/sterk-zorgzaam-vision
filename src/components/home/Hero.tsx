@@ -33,11 +33,22 @@ export function Hero({
       </div>
       <figure className="sz-hero-figure">
         <div className="sz-hero-veil" aria-hidden="true" />
-        <img
-          src="/assets/hero-youth.jpg"
-          alt="Een diverse groep jongeren samen in de stad"
-          fetchPriority="high"
-        />
+        {/* Desktop toont de één-op-één-begeleiding; mobiel houdt bewust de
+            groepsfoto. Niet gelijktrekken. */}
+        <picture>
+          <source
+            type="image/webp"
+            srcSet="/assets/hero-wandeling-800.webp 800w, /assets/hero-wandeling-1200.webp 1200w, /assets/hero-wandeling.webp 1672w"
+            sizes="(max-width: 1100px) 100vw, 55vw"
+          />
+          <img
+            src="/assets/hero-wandeling.jpg"
+            srcSet="/assets/hero-wandeling-800.jpg 800w, /assets/hero-wandeling-1200.jpg 1200w, /assets/hero-wandeling.jpg 1672w"
+            sizes="(max-width: 1100px) 100vw, 55vw"
+            alt="Een jongere en een begeleider lopen samen door de straat"
+            fetchPriority="high"
+          />
+        </picture>
       </figure>
     </section>
   );
