@@ -46,6 +46,8 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
   const [zipBezig, setZipBezig] = useState(false);
   const [melding, setMelding] = useState("");
   const [mapStats, setMapStats] = useState<Record<string, { aantal: number; bytes: number }>>({});
+  const [hernoemDoel, setHernoemDoel] = useState<{ naam: string; isMap: boolean } | null>(null);
+  const [hernoemNaam, setHernoemNaam] = useState("");
   const bestandKiezer = useRef<HTMLInputElement>(null);
   const mapKiezer = useRef<HTMLInputElement>(null);
 
@@ -255,6 +257,87 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
   };
 
   /** Verwijdert een bestand, of een map inclusief alles wat erin zit. */
+  const hernoemen = async () => {
+    if (!supabase || !hernoemDoel) return;
+    const nieuw = hernoemNaam.trim().replace(/[/\\]/g, "-");
+    if (!nieuw || nieuw === hernoemDoel.naam) {
+      setHernoemDoel(null);
+      return;
+    }
+    const van = volledigPad(hernoemDoel.naam);
+    const naar = volledigPad(nieuw);
+    setFout("");
+
+    if (!hernoemDoel.isMap) {
+      const { error } = await supabase.storage.from(BUCKET).move(van, naar);
+      if (error) setFout("Naam wijzigen lukte niet. Bestaat de nieuwe naam al?");
+      setHernoemDoel(null);
+      laden();
+      return;
+    }
+
+    /* Een map is alleen een pad: alle objecten eronder verplaatsen. */
+    const db = supabase;
+    const paden: string[] = [];
+    const doorlopen = async (map: string) => {
+      const { data } = await db.storage.from(BUCKET).list(map, { limit: 500 });
+      for (const item of data ?? []) {
+        const kind = `${map}/${item.name}`;
+        if (item.id === null) await doorlopen(kind);
+        else paden.push(kind);
+      }
+    };
+    await doorlopen(van);
+    for (const oud of paden) {
+      const { error } = await db.storage.from(BUCKET).move(oud, `${naar}${oud.slice(van.length)}`);
+      if (error) {
+        setFout("Niet alles kon worden hernoemd. Probeer het opnieuw.");
+        break;
+      }
+    }
+    setHernoemDoel(null);
+    laden();
+  };
+
+  const startHernoemen = (naam: string, isMap: boolean) => {
+    setHernoemDoel({ naam, isMap });
+    setHernoemNaam(naam);
+  };
+
+  const hernoemVeld = (
+    <span className="pz-hernoemveld">
+      <input
+        autoFocus
+        value={hernoemNaam}
+        onChange={(e) => setHernoemNaam(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") hernoemen();
+          if (e.key === "Escape") setHernoemDoel(null);
+        }}
+        aria-label="Nieuwe naam"
+      />
+      <button type="button" onClick={hernoemen} aria-label="Naam opslaan">
+        <Check stroke="#0d2028" width={16} />
+      </button>
+      <button type="button" onClick={() => setHernoemDoel(null)} aria-label="Annuleren">
+        <Close stroke="#132a34" width={14} />
+      </button>
+    </span>
+  );
+
+  const potloodKnop = (naam: string, isMap: boolean) => (
+    <button
+      type="button"
+      className="pz-hernoem"
+      onClick={() => startHernoemen(naam, isMap)}
+      aria-label={`Naam van ${naam} wijzigen`}
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="#5c7480" strokeWidth={1.7} width={15}>
+        <path d="M4 20h4l10-10a2.8 2.8 0 0 0-4-4L4 16z" />
+      </svg>
+    </button>
+  );
+
   const verwijderen = async (naam: string, isMap: boolean) => {
     if (!supabase) return;
     const doel = volledigPad(naam);
@@ -464,6 +547,10 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
 
           {mappen.map((map) => (
             <li key={map.name} className="pz-rij">
+              {hernoemDoel?.isMap && hernoemDoel.naam === map.name ? (
+                hernoemVeld
+              ) : (
+                <>
               <button
                 type="button"
                 onClick={() => setPad(volledigPad(map.name))}
@@ -485,7 +572,9 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
                 <ArrowRight stroke="#8a6420" width={14} />
               </button>
               {beheerder && (
-                <button
+                <>
+                  {potloodKnop(map.name, true)}
+                  <button
                   type="button"
                   className="pz-verwijder"
                   onClick={() => verwijderen(map.name, true)}
@@ -493,12 +582,19 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
                 >
                   <Close stroke="#b4482f" width={14} />
                 </button>
+                </>
+              )}
+                </>
               )}
             </li>
           ))}
 
           {bestanden.map((bestand) => (
             <li key={bestand.name} className="pz-rij">
+              {hernoemDoel && !hernoemDoel.isMap && hernoemDoel.naam === bestand.name ? (
+                hernoemVeld
+              ) : (
+                <>
               <label className="pz-vink" onClick={(e) => e.stopPropagation()}>
                 <input
                   type="checkbox"
@@ -522,7 +618,9 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
                 <span className="pz-download">Downloaden</span>
               </button>
               {beheerder && (
-                <button
+                <>
+                  {potloodKnop(bestand.name, false)}
+                  <button
                   type="button"
                   className="pz-verwijder"
                   onClick={() => verwijderen(bestand.name, false)}
@@ -530,6 +628,9 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
                 >
                   <Close stroke="#b4482f" width={14} />
                 </button>
+                </>
+              )}
+                </>
               )}
             </li>
           ))}
