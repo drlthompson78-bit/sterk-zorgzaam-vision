@@ -43,6 +43,7 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
   const [uploadBezig, setUploadBezig] = useState(false);
   const [selectie, setSelectie] = useState<string[]>([]);
   const [zipBezig, setZipBezig] = useState(false);
+  const [melding, setMelding] = useState("");
   const bestandKiezer = useRef<HTMLInputElement>(null);
   const mapKiezer = useRef<HTMLInputElement>(null);
 
@@ -126,6 +127,42 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
       setFout("Niet alle bestanden konden worden opgehaald. Probeer het opnieuw.");
     }
     setZipBezig(false);
+  };
+
+  /* "Delen" = een tijdelijke koppeling (7 dagen) op het klembord. */
+  const koppelingKopieren = async () => {
+    if (!supabase || selectie.length === 0) return;
+    setFout("");
+    const links: string[] = [];
+    for (const naam of selectie) {
+      const { data, error } = await supabase.storage
+        .from(BUCKET)
+        .createSignedUrl(volledigPad(naam), 60 * 60 * 24 * 7);
+      if (error || !data) {
+        setFout("De koppeling kon niet worden gemaakt.");
+        return;
+      }
+      links.push(selectie.length > 1 ? `${naam}: ${data.signedUrl}` : data.signedUrl);
+    }
+    try {
+      await navigator.clipboard.writeText(links.join("\n"));
+      setMelding(
+        selectie.length > 1
+          ? `${selectie.length} koppelingen gekopieerd (7 dagen geldig)`
+          : "Koppeling gekopieerd (7 dagen geldig)",
+      );
+      window.setTimeout(() => setMelding(""), 4000);
+    } catch {
+      setFout("Kopiëren naar het klembord lukte niet.");
+    }
+  };
+
+  const selectieVerwijderen = async () => {
+    if (!supabase || selectie.length === 0) return;
+    if (!window.confirm(`${selectie.length} bestand(en) verwijderen?`)) return;
+    await supabase.storage.from(BUCKET).remove(selectie.map((n) => volledigPad(n)));
+    setSelectie([]);
+    laden();
   };
 
   const uploaden = async (lijst: FileList | null, metMappen = false) => {
