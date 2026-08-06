@@ -14,13 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      downloadlog: {
+        Row: {
+          gebruiker: string
+          id: number
+          pad: string
+          tijdstip: string
+        }
+        Insert: {
+          gebruiker?: string
+          id?: never
+          pad: string
+          tijdstip?: string
+        }
+        Update: {
+          gebruiker?: string
+          id?: never
+          pad?: string
+          tijdstip?: string
+        }
+        Relationships: []
+      }
+      profielen: {
+        Row: {
+          aangemaakt: string
+          id: string
+          naam: string
+          rol: string
+        }
+        Insert: {
+          aangemaakt?: string
+          id: string
+          naam?: string
+          rol?: string
+        }
+        Update: {
+          aangemaakt?: string
+          id?: string
+          naam?: string
+          rol?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_beheerder: { Args: never; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
