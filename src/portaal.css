@@ -24,6 +24,38 @@
   font: inherit;
 }
 
+/* Inlogscherm met documentaire achtergrondfoto. */
+.pz-root--inlog {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  position: relative;
+}
+.pz-root--inlog::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(19, 42, 52, 0.62), rgba(19, 42, 52, 0.78));
+  pointer-events: none;
+}
+.pz-root--inlog > * {
+  position: relative;
+  z-index: 1;
+}
+.pz-root--inlog .pz-header img {
+  filter: brightness(0) invert(1);
+}
+.pz-root--inlog .pz-inlogkaart {
+  background: rgba(250, 248, 242, 0.96);
+  box-shadow: 0 26px 60px rgba(9, 24, 31, 0.4);
+}
+@media (max-width: 720px) {
+  .pz-root--inlog {
+    background-attachment: scroll;
+  }
+}
+
 .pz-header {
   display: flex;
   align-items: center;

@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import type { Session } from "@supabase/supabase-js";
 import { FadeLink } from "@/components/site/nav";
 import { PortaalInloggen } from "@/components/portaal/Inloggen";
+import achtergrond from "@/assets/portaal-achtergrond.png.asset.json";
 import { Bestanden } from "@/components/portaal/Bestanden";
 import { Gebruikers } from "@/components/portaal/Gebruikers";
 import { Deellinks } from "@/components/portaal/Deellinks";
@@ -70,7 +71,11 @@ function Portaal() {
   }, [session]);
 
   return (
-    <div className="pz-root" lang="nl">
+    <div
+      className={`pz-root${!session && geladen ? " pz-root--inlog" : ""}`}
+      lang="nl"
+      style={!session && geladen ? { backgroundImage: `url(${achtergrond.url})` } : undefined}
+    >
       <header className="pz-header">
         <FadeLink to="/" aria-label="Naar de website">
           <img src="/assets/logo.svg" alt="Sterk & Zorgzaam" />
