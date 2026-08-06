@@ -43,6 +43,7 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
   const [uploadBezig, setUploadBezig] = useState(false);
   const [selectie, setSelectie] = useState<string[]>([]);
   const [zipBezig, setZipBezig] = useState(false);
+  const [melding, setMelding] = useState("");
   const bestandKiezer = useRef<HTMLInputElement>(null);
   const mapKiezer = useRef<HTMLInputElement>(null);
 
@@ -126,6 +127,42 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
       setFout("Niet alle bestanden konden worden opgehaald. Probeer het opnieuw.");
     }
     setZipBezig(false);
+  };
+
+  /* "Delen" = een tijdelijke koppeling (7 dagen) op het klembord. */
+  const koppelingKopieren = async () => {
+    if (!supabase || selectie.length === 0) return;
+    setFout("");
+    const links: string[] = [];
+    for (const naam of selectie) {
+      const { data, error } = await supabase.storage
+        .from(BUCKET)
+        .createSignedUrl(volledigPad(naam), 60 * 60 * 24 * 7);
+      if (error || !data) {
+        setFout("De koppeling kon niet worden gemaakt.");
+        return;
+      }
+      links.push(selectie.length > 1 ? `${naam}: ${data.signedUrl}` : data.signedUrl);
+    }
+    try {
+      await navigator.clipboard.writeText(links.join("\n"));
+      setMelding(
+        selectie.length > 1
+          ? `${selectie.length} koppelingen gekopieerd (7 dagen geldig)`
+          : "Koppeling gekopieerd (7 dagen geldig)",
+      );
+      window.setTimeout(() => setMelding(""), 4000);
+    } catch {
+      setFout("Kopiëren naar het klembord lukte niet.");
+    }
+  };
+
+  const selectieVerwijderen = async () => {
+    if (!supabase || selectie.length === 0) return;
+    if (!window.confirm(`${selectie.length} bestand(en) verwijderen?`)) return;
+    await supabase.storage.from(BUCKET).remove(selectie.map((n) => volledigPad(n)));
+    setSelectie([]);
+    laden();
   };
 
   const uploaden = async (lijst: FileList | null, metMappen = false) => {
@@ -291,26 +328,63 @@ export function Bestanden({ session, beheerder }: { session: Session; beheerder:
       )}
 
       {bestanden.length > 0 && (
-        <div className="pz-selectiebalk">
+        <div className="pz-actiebalk">
           <label className="pz-selectall">
             <input
               type="checkbox"
-              checked={selectie.length === bestanden.length}
+              checked={selectie.length > 0 && selectie.length === bestanden.length}
               onChange={(e) => setSelectie(e.target.checked ? bestanden.map((b) => b.name) : [])}
+              aria-label="Alles selecteren"
             />
-            Alles selecteren
+            {selectie.length > 0 ? `${selectie.length} geselecteerd` : "Alles selecteren"}
           </label>
-          <span className="pz-selectietelling">
-            {selectie.length > 0 ? `${selectie.length} geselecteerd` : ""}
-          </span>
+
+          <span className="pz-actiescheiding" aria-hidden="true" />
+
           <button
             type="button"
-            className="pz-knop-donker pz-knop-klein"
+            className="pz-actie"
+            onClick={koppelingKopieren}
+            disabled={selectie.length === 0}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7}>
+              <path d="M10 13a5 5 0 0 0 7.1 0l3-3a5 5 0 0 0-7.1-7.1L11.3 4.6" />
+              <path d="M14 11a5 5 0 0 0-7.1 0l-3 3a5 5 0 0 0 7.1 7.1l1.7-1.7" />
+            </svg>
+            Delen
+          </button>
+
+          <button
+            type="button"
+            className="pz-actie"
             onClick={selectieDownloaden}
             disabled={selectie.length === 0 || zipBezig}
           >
-            {zipBezig ? "Bezig met inpakken…" : "Selectie downloaden (zip)"}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7}>
+              <path d="M12 3v12" />
+              <path d="m7 11 5 5 5-5" />
+              <path d="M4 20h16" />
+            </svg>
+            {zipBezig ? "Bezig met inpakken…" : "Downloaden"}
           </button>
+
+          {beheerder && (
+            <button
+              type="button"
+              className="pz-actie pz-actie--rood"
+              onClick={selectieVerwijderen}
+              disabled={selectie.length === 0}
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7}>
+                <path d="M4 7h16" />
+                <path d="M9 7V5h6v2" />
+                <path d="M6 7l1 13h10l1-13" />
+              </svg>
+              Verwijderen
+            </button>
+          )}
+
+          {melding && <span className="pz-actiemelding">{melding}</span>}
         </div>
       )}
 
