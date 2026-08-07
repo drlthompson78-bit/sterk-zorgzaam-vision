@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import type { Session } from "@supabase/supabase-js";
 import { FadeLink } from "@/components/site/nav";
-import { Close } from "@/components/site/icons";
 import { PortaalInloggen } from "@/components/portaal/Inloggen";
 import achtergrond from "@/assets/portaal-achtergrond.png.asset.json";
 import { Bestanden } from "@/components/portaal/Bestanden";
@@ -82,14 +81,7 @@ function Portaal() {
           <FadeLink to="/" aria-label="Naar de website">
             <img src="/assets/logo.svg" alt="Sterk & Zorgzaam" />
           </FadeLink>
-        ) : (
-          <>
-            <span />
-            <FadeLink to="/" className="pz-sluit" aria-label="Sluiten">
-              <Close stroke="#e8bd65" width={16} />
-            </FadeLink>
-          </>
-        )}
+        ) : null}
         {session && (
           <div className="pz-headerrechts">
             <span className="pz-wie">
