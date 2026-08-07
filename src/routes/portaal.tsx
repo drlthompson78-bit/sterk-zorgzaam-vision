@@ -82,9 +82,12 @@ function Portaal() {
             <img src="/assets/logo.svg" alt="Sterk & Zorgzaam" />
           </FadeLink>
         ) : (
-          <FadeLink to="/" className="pz-terug">
-            ← Terug naar de website
-          </FadeLink>
+          <>
+            <span />
+            <FadeLink to="/" className="pz-sluit" aria-label="Sluiten">
+              <Close stroke="#e8bd65" width={16} />
+            </FadeLink>
+          </>
         )}
         {session && (
           <div className="pz-headerrechts">
