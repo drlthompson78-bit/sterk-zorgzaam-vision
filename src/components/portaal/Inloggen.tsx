@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ArrowRight, Close } from "@/components/site/icons";
-import { FadeLink } from "@/components/site/FadeLink";
+import { FadeLink } from "@/components/site/nav";
 import { inlogFout, supabase } from "@/lib/supabase";
 
 /** Echt inlogscherm van het documentenportaal. */
