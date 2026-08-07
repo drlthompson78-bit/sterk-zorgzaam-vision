@@ -130,9 +130,9 @@ export function PortaalInloggen() {
         <Close stroke="#132a34" width={14} />
       </FadeLink>
       <img src="/assets/logo.svg" alt="Sterk & Zorgzaam" className="pz-inloglogo" />
-      <p className="pz-eyebrow">Documentenportaal</p>
+      <p className="pz-eyebrow">Sterk &amp; Zorgzaam</p>
       <h1>Welkom</h1>
-      <p className="pz-sub">Log in om bij de documenten te komen.</p>
+      <p className="pz-sub">Log in met je account om verder te gaan.</p>
 
       <form onSubmit={inloggen} className="pz-form">
         <label>
