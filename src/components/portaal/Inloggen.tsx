@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { ArrowRight } from "@/components/site/icons";
+import { ArrowRight, Close } from "@/components/site/icons";
+import { FadeLink } from "@/components/site/FadeLink";
 import { inlogFout, supabase } from "@/lib/supabase";
 
 /** Echt inlogscherm van het documentenportaal. */
@@ -125,6 +126,9 @@ export function PortaalInloggen() {
 
   return (
     <div className="pz-inlogkaart">
+      <FadeLink to="/" className="pz-sluit" aria-label="Sluiten">
+        <Close stroke="#132a34" width={14} />
+      </FadeLink>
       <img src="/assets/logo.svg" alt="Sterk & Zorgzaam" className="pz-inloglogo" />
       <p className="pz-eyebrow">Documentenportaal</p>
       <h1>Welkom</h1>
