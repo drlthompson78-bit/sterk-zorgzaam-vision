@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import type { Session } from "@supabase/supabase-js";
 import { FadeLink } from "@/components/site/nav";
+import { Close } from "@/components/site/icons";
 import { PortaalInloggen } from "@/components/portaal/Inloggen";
 import achtergrond from "@/assets/portaal-achtergrond.png.asset.json";
 import { Bestanden } from "@/components/portaal/Bestanden";
