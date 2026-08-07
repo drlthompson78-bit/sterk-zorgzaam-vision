@@ -45,19 +45,22 @@
   z-index: 1;
 }
 .pz-sluit {
+  position: absolute;
+  top: 14px;
+  right: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  background: rgba(19, 42, 52, 0.9);
-  border: 1px solid rgba(232, 189, 101, 0.35);
+  background: rgba(19, 42, 52, 0.06);
+  border: 1px solid rgba(19, 42, 52, 0.14);
   cursor: pointer;
   transition: background 0.2s ease;
 }
 .pz-sluit:hover {
-  background: rgba(19, 42, 52, 1);
+  background: rgba(19, 42, 52, 0.14);
 }
 .pz-root--inlog .pz-inlogkaart {
   background: rgba(250, 248, 242, 0.96);
@@ -148,6 +151,7 @@
 /* ------------------------------------------------------------- inloggen */
 
 .pz-inlogkaart {
+  position: relative;
   max-width: 440px;
   margin: clamp(20px, 6vh, 60px) auto;
   padding: clamp(26px, 4vw, 40px);
