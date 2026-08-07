@@ -73,14 +73,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Sterk & Zorgzaam — Begeleiding voor jongeren 12–18" },
+      { title: "Samen Sterk & Zorgzaam — Kleine stapjes zijn ook stappen" },
       {
         name: "description",
         content:
           "Cultuursensitieve, relationele en praktijkgerichte begeleiding voor jongeren die vastlopen in gedrag, ontwikkeling of omgeving.",
       },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Sterk & Zorgzaam — Begeleiding voor jongeren 12–18" },
+      { property: "og:title", content: "Samen Sterk & Zorgzaam — Kleine stapjes zijn ook stappen" },
       {
         property: "og:description",
         content:
@@ -89,7 +89,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Sterk & Zorgzaam — Begeleiding voor jongeren 12–18" },
+      { name: "twitter:title", content: "Samen Sterk & Zorgzaam — Kleine stapjes zijn ook stappen" },
       {
         name: "twitter:description",
         content:
@@ -98,12 +98,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         property: "og:image",
         content:
-          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/abbefad1-aac8-491e-84d9-5c6356019fa6/id-preview-4c97a9a6--a946eef5-4859-4690-a29d-0c373084754b.lovable.app-1784008542170.png",
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/3df8c995-041b-4597-928a-0fce62802b66/id-preview-f370efb2--a946eef5-4859-4690-a29d-0c373084754b.lovable.app-1786080035427.png",
       },
       {
         name: "twitter:image",
         content:
-          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/abbefad1-aac8-491e-84d9-5c6356019fa6/id-preview-4c97a9a6--a946eef5-4859-4690-a29d-0c373084754b.lovable.app-1784008542170.png",
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/3df8c995-041b-4597-928a-0fce62802b66/id-preview-f370efb2--a946eef5-4859-4690-a29d-0c373084754b.lovable.app-1786080035427.png",
       },
     ],
     links: [
@@ -113,7 +113,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       /* Favicon: SVG waar het kan, PNG voor platforms die dat niet ondersteunen. */
       { rel: "icon", type: "image/svg+xml", href: "/assets/favicon.svg" },
-      { rel: "icon", type: "image/png", sizes: "32x32", href: "/assets/favicon-32.png" },
+      { rel: "icon", type: "image/svg+xml", sizes: "32x32", href: "/assets/favicon.svg" },
       { rel: "apple-touch-icon", sizes: "180x180", href: "/assets/apple-touch-icon.png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },

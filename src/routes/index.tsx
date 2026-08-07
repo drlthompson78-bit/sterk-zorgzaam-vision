@@ -16,7 +16,7 @@ export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
     meta: [
-      { title: "Sterk & Zorgzaam — Begeleiding voor jongeren 12–18" },
+      { title: "Samen Sterk & Zorgzaam — Kleine stapjes zijn ook stappen" },
       {
         name: "description",
         content:
