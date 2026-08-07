@@ -77,9 +77,15 @@ function Portaal() {
       style={!session && geladen ? { backgroundImage: `url(${achtergrond.url})` } : undefined}
     >
       <header className="pz-header">
-        <FadeLink to="/" aria-label="Naar de website">
-          <img src="/assets/logo.svg" alt="Sterk & Zorgzaam" />
-        </FadeLink>
+        {session ? (
+          <FadeLink to="/" aria-label="Naar de website">
+            <img src="/assets/logo.svg" alt="Sterk & Zorgzaam" />
+          </FadeLink>
+        ) : (
+          <FadeLink to="/" className="pz-terug">
+            ← Terug naar de website
+          </FadeLink>
+        )}
         {session && (
           <div className="pz-headerrechts">
             <span className="pz-wie">
