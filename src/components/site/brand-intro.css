@@ -49,6 +49,16 @@ html[data-sz-intro] .sz-brand-intro {
 }
 .sz-intro-artwork {
   width: clamp(260px, 47vw, 510px);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.sz-intro-artwork:focus-visible {
+  outline: 1px solid #d4aa55;
+  outline-offset: 12px;
 }
 .sz-intro-logo {
   display: block;
@@ -72,34 +82,6 @@ html[data-sz-intro] .sz-brand-intro {
 .sz-intro-light {
   opacity: 0;
 }
-.sz-intro-skip {
-  position: absolute;
-  right: max(28px, env(safe-area-inset-right));
-  bottom: max(26px, env(safe-area-inset-bottom));
-  display: flex;
-  gap: 18px;
-  align-items: center;
-  padding: 12px 4px;
-  border: 0;
-  background: transparent;
-  color: #e1d7c5;
-  font:
-    500 12px/1.2 Arial,
-    sans-serif;
-  letter-spacing: 0.06em;
-  cursor: pointer;
-  transition: color 180ms ease;
-}
-.sz-intro-skip:hover {
-  color: #d4aa55;
-}
-.sz-intro-skip:focus-visible {
-  outline: 1px solid #d4aa55;
-  outline-offset: 5px;
-}
-.sz-intro-skip span {
-  font-size: 18px;
-}
 html[data-sz-intro="running"] .sz-intro-dog path {
   animation: sz-dog-draw 1900ms linear 180ms both;
 }
@@ -122,12 +104,23 @@ html[data-sz-intro="running"] .sz-intro-panels > span {
   animation: sz-curtain-out 720ms cubic-bezier(0.76, 0, 0.24, 1) calc(3750ms + var(--panel) * 65ms)
     both;
 }
-html[data-sz-intro="running"] .sz-intro-skip {
-  animation: sz-skip-out 200ms ease 3550ms forwards;
+html[data-sz-intro="running"]
+  .is-complete
+  :is(.sz-intro-dog, .sz-intro-dog path, .sz-intro-wordmark, .sz-intro-dimmer, .sz-intro-light) {
+  animation: none;
 }
-.sz-brand-intro.is-skipping {
-  opacity: 0;
-  transition: opacity 180ms ease;
+.is-complete .sz-intro-dog,
+.is-complete .sz-intro-wordmark {
+  transform: none;
+}
+.is-complete .sz-intro-dog path {
+  stroke-dashoffset: 0;
+}
+.is-complete .sz-intro-wordmark {
+  opacity: 1;
+}
+.is-complete .sz-intro-dimmer {
+  transform: scaleX(0);
 }
 @keyframes sz-dog-draw {
   to {
@@ -177,12 +170,6 @@ html[data-sz-intro="running"] .sz-intro-skip {
 @keyframes sz-curtain-out {
   to {
     transform: translateY(-101%);
-  }
-}
-@keyframes sz-skip-out {
-  to {
-    opacity: 0;
-    visibility: hidden;
   }
 }
 @media (max-width: 600px) {

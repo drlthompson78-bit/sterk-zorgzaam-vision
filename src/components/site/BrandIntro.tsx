@@ -4,6 +4,7 @@ import "./brand-intro.css";
 
 const SESSION_KEY = "ssz-brand-intro-v1";
 const DURATION = 4780;
+const END_FRAME = 3550;
 
 // Runs before the first paint. A bounded fallback always releases the page,
 // including when the main JavaScript fails to hydrate.
@@ -18,7 +19,8 @@ function clearBootstrapGuard() {
 
 export function BrandIntro() {
   const [visible, setVisible] = useState(true);
-  const [leaving, setLeaving] = useState(false);
+  const [completed, setCompleted] = useState(false);
+  const completeRequested = useRef(false);
   const introRef = useRef<HTMLDivElement>(null);
   const finishTimer = useRef<number | undefined>(undefined);
   const uid = useId().replace(/:/g, "");
@@ -31,10 +33,30 @@ export function BrandIntro() {
     setVisible(false);
   }, []);
 
-  const skip = useCallback(() => {
-    setLeaving(true);
+  const completeIntro = useCallback(() => {
+    if (completeRequested.current) return;
+    const animations =
+      introRef.current
+        ?.getAnimations({ subtree: true })
+        .filter(
+          (animation) =>
+            animation instanceof CSSAnimation &&
+            ["sz-logo-out", "sz-curtain-out"].includes(animation.animationName),
+        ) ?? [];
+    const progress = Math.max(
+      0,
+      ...animations.map((animation) =>
+        typeof animation.currentTime === "number" ? animation.currentTime : 0,
+      ),
+    );
+    if (progress >= END_FRAME) return;
+
+    completeRequested.current = true;
+    setCompleted(true);
+    // Show the finished artwork, then keep the existing exit and curtain timing.
+    for (const animation of animations) animation.currentTime = END_FRAME;
     window.clearTimeout(finishTimer.current);
-    finishTimer.current = window.setTimeout(finish, 180);
+    finishTimer.current = window.setTimeout(finish, DURATION - END_FRAME);
   }, [finish]);
 
   useEffect(() => {
@@ -64,7 +86,7 @@ export function BrandIntro() {
     introRef.current?.focus({ preventScroll: true });
     finishTimer.current = window.setTimeout(finish, DURATION);
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") skip();
+      if (event.key === "Escape") completeIntro();
     };
     const onMotionChange = () => {
       if (motion.matches) finish();
@@ -78,14 +100,14 @@ export function BrandIntro() {
       document.documentElement.removeAttribute("data-sz-intro");
       if (content) content.inert = false;
     };
-  }, [finish, skip, visible]);
+  }, [completeIntro, finish, visible]);
 
   if (!visible) return null;
 
   return (
     <div
       ref={introRef}
-      className={`sz-brand-intro${leaving ? " is-skipping" : ""}`}
+      className={`sz-brand-intro${completed ? " is-complete" : ""}`}
       role="dialog"
       aria-modal="true"
       aria-label="Welkom bij Sterk en Zorgzaam"
@@ -97,8 +119,13 @@ export function BrandIntro() {
           <span key={panel} style={{ "--panel": panel } as React.CSSProperties} />
         ))}
       </div>
-      <div className="sz-intro-artwork" aria-hidden="true">
-        <svg className="sz-intro-logo" viewBox="-16 -12 456 304" fill="none">
+      <button
+        className="sz-intro-artwork"
+        type="button"
+        aria-label="Toon het complete logo en open de website"
+        onClick={completeIntro}
+      >
+        <svg className="sz-intro-logo" viewBox="-16 -12 456 304" fill="none" aria-hidden="true">
           <defs>
             <g id={`${uid}-letters`}>
               {wordmarkPaths.map((path, i) => (
@@ -147,9 +174,6 @@ export function BrandIntro() {
             </g>
           </g>
         </svg>
-      </div>
-      <button className="sz-intro-skip" type="button" onClick={skip}>
-        Overslaan <span aria-hidden="true">↗</span>
       </button>
     </div>
   );
