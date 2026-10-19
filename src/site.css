@@ -21,7 +21,8 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
+  scrollbar-gutter: stable;
   background: var(--sz-neutral);
 }
 
@@ -61,14 +62,6 @@ body {
   }
 }
 
-@keyframes szPageFade {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
 @keyframes szPageLift {
   from {
     transform: translateY(14px);
@@ -89,25 +82,13 @@ body {
 }
 
 /*
- * De paginacontainer krijgt bewust alléén een opacity-animatie. Een transform
- * hier (ook een identity-transform na afloop) maakt deze container het
- * referentiekader voor elke position:fixed overlay — die plakt dan aan de
- * pagina in plaats van aan het scherm. De translateY-lift staat daarom op de
- * header en op het bovenste blok van elke pagina (.sz-lift).
+ * Routeovergangen gebruiken een vaste laag buiten de paginacontainer.
+ * Een transform op body of .sz-root zou vaste overlays aan de pagina koppelen.
+ * De kleine entreelift blijft daarom beperkt tot header en bovenste paginablok.
  */
-.sz-root {
-  animation: szPageFade 900ms cubic-bezier(0.25, 0.8, 0.3, 1) both;
-}
 .sz-header,
 .sz-lift {
   animation: szPageLift 900ms cubic-bezier(0.25, 0.8, 0.3, 1) both;
-}
-body.sz-leaving {
-  transition:
-    opacity 600ms cubic-bezier(0.4, 0, 0.6, 1),
-    transform 600ms cubic-bezier(0.4, 0, 0.6, 1);
-  opacity: 0;
-  transform: translateY(-10px);
 }
 
 /* ---------------------------------------------------------------- layout */

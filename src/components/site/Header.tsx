@@ -110,7 +110,7 @@ export function Header() {
             {MENU_TEGELS.map((tegel) => {
               const inhoud = (
                 <>
-                  <img src={tegel.src} alt="" />
+                  <img src={menuOpen ? tegel.src : undefined} alt="" decoding="async" />
                   <span className="mk-veil" aria-hidden="true" />
                   <span className="mk-label">
                     {tegel.label} <ArrowRight className="mk-pijl" stroke="#fffdf8" width={22} />

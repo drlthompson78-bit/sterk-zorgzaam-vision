@@ -1,4 +1,5 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
+import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 
 const SEGMENTEN: { tekst: string; nadruk?: boolean }[] = [
   { tekst: "Wij zijn er voor " },
@@ -27,7 +28,7 @@ const KOLOMMEN = [
   },
 ];
 
-/** Splitst de tekst in losse woorden zodat GSAP ze per woord kan animeren. */
+/** Splitst de tekst in losse woorden voor de gestaffelde animatie. */
 function Woorden() {
   let sleutel = 0;
   return (
@@ -57,52 +58,7 @@ function Woorden() {
 export function Doelgroep() {
   const alinea = useRef<HTMLParagraphElement>(null);
 
-  useEffect(() => {
-    const el = alinea.current;
-    if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    let io: IntersectionObserver | undefined;
-    let afgebroken = false;
-
-    import("gsap").then(({ gsap }) => {
-      if (afgebroken || !alinea.current) return;
-      const woorden = alinea.current.querySelectorAll("span[data-w]");
-      gsap.set(woorden, { opacity: 0, y: 16 });
-      let speelt = false;
-      io = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((e) => {
-            if (e.intersectionRatio >= 0.55 && !speelt) {
-              speelt = true;
-              gsap.fromTo(
-                woorden,
-                { opacity: 0, y: 16 },
-                {
-                  opacity: 1,
-                  y: 0,
-                  duration: 0.9,
-                  ease: "power2.out",
-                  stagger: 0.06,
-                  overwrite: true,
-                },
-              );
-            } else if (!e.isIntersecting && speelt) {
-              speelt = false;
-              gsap.set(woorden, { opacity: 0, y: 16 });
-            }
-          });
-        },
-        { threshold: [0, 0.55] },
-      );
-      io.observe(alinea.current);
-    });
-
-    return () => {
-      afgebroken = true;
-      io?.disconnect();
-    };
-  }, []);
+  useScrollReveal(alinea, "span[data-w]", 16, 900, 60);
 
   return (
     <section id="doelgroep" className="sz-section sz-doelgroep" aria-labelledby="audience-title">
@@ -124,7 +80,14 @@ export function Doelgroep() {
         <div className="sz-doelgroep-foto" aria-hidden="true">
           <div className="sz-vel sz-scheur" />
           <div className="sz-foto sz-scheur">
-            <img src="/assets/doelgroep-bankje.jpg" alt="" />
+            <img
+              src="/assets/doelgroep-bankje.jpg"
+              alt=""
+              loading="lazy"
+              decoding="async"
+              width={900}
+              height={600}
+            />
           </div>
         </div>
       </div>

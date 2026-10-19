@@ -10,6 +10,9 @@ import {
 
 import appCss from "../styles.css?url";
 import { Toaster } from "@/components/ui/sonner";
+import { BrandIntro, brandIntroBootstrap } from "@/components/site/BrandIntro";
+import { SmoothScroll } from "@/components/site/SmoothScroll";
+import { PageTransition } from "@/components/site/PageTransition";
 
 function NotFoundComponent() {
   return (
@@ -89,7 +92,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Samen Sterk & Zorgzaam — Kleine stapjes zijn ook stappen" },
+      {
+        name: "twitter:title",
+        content: "Samen Sterk & Zorgzaam — Kleine stapjes zijn ook stappen",
+      },
       {
         name: "twitter:description",
         content:
@@ -121,10 +127,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&display=swap",
       },
-      {
-        rel: "stylesheet",
-        href: "https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css",
-      },
     ],
   }),
   shellComponent: RootShell,
@@ -135,9 +137,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="nl">
+    <html lang="nl" suppressHydrationWarning>
       <head>
         <HeadContent />
+        <script dangerouslySetInnerHTML={{ __html: brandIntroBootstrap }} />
       </head>
       <body>
         {children}
@@ -152,7 +155,12 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
+      <SmoothScroll />
+      <BrandIntro />
+      <PageTransition />
+      <div id="sz-site-content">
+        <Outlet />
+      </div>
       <Toaster position="top-center" richColors />
     </QueryClientProvider>
   );

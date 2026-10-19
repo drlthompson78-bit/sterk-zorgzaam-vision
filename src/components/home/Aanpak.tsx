@@ -201,7 +201,14 @@ export function Aanpak() {
               }
             >
               <span className="sz-pijler-foto" aria-hidden="true">
-                <img src={pijler.foto} alt="" loading="lazy" />
+                <img
+                  src={pijler.foto}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  width={600}
+                  height={800}
+                />
               </span>
               <span className="sz-pijler-veil" aria-hidden="true" />
               <Paperclip className="sz-clip" />

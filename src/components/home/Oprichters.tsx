@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Close, Mail, Phone } from "../site/icons";
+import { scrollToElement } from "@/lib/scroll";
 
 type Persoon = {
   id: "miriam" | "giovanni";
@@ -92,6 +93,7 @@ function Interview({
       aria-hidden={!open}
       role="dialog"
       aria-label={persoon.naam}
+      data-lenis-prevent
     >
       <button type="button" className="sz-interview-sluit" aria-label="Sluiten" onClick={onSluiten}>
         <Close stroke="#e8bd65" width={16} />
@@ -146,7 +148,7 @@ export function Oprichters() {
     setInterview(id);
     if (window.matchMedia(MOBIEL).matches) return; // paneel vult daar het scherm
     const sec = document.getElementById("oprichters");
-    if (sec) window.scrollTo({ top: sec.offsetTop - 70, behavior: "smooth" });
+    if (sec) scrollToElement(sec, -70);
   };
 
   /* Op mobiel het paneel als dialoog behandelen: pagina eronder niet meescrollen,
@@ -168,7 +170,14 @@ export function Oprichters() {
 
   return (
     <section id="oprichters" className="sz-section sz-oprichters" aria-labelledby="founders-title">
-      <img src="/assets/oprichters.jpg" alt="Miriam Twilt-Mendonça en Giovanni Peters" />
+      <img
+        src="/assets/oprichters.jpg"
+        alt="Miriam Twilt-Mendonça en Giovanni Peters"
+        loading="lazy"
+        decoding="async"
+        width={1800}
+        height={1195}
+      />
       <div className="sz-oprichters-veil" aria-hidden="true" />
       <header>
         <p>Oprichters</p>

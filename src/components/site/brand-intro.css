@@ -1,0 +1,200 @@
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+html[data-sz-intro] {
+  overflow: hidden;
+}
+.sz-brand-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
+  color: #eee8dc;
+  outline: none;
+}
+html[data-sz-intro] .sz-brand-intro {
+  visibility: visible;
+  pointer-events: auto;
+}
+.sz-intro-panels {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  z-index: -1;
+}
+.sz-intro-panels > span {
+  flex: 1;
+  min-width: 0;
+  margin-right: -1px;
+  background: #0b2028;
+}
+.sz-intro-artwork {
+  width: clamp(260px, 47vw, 510px);
+}
+.sz-intro-logo {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.sz-intro-dog {
+  transform: translateX(-111px);
+}
+.sz-intro-dog path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+.sz-intro-wordmark {
+  opacity: 0;
+}
+.sz-intro-dimmer {
+  transform-origin: 307px 90px;
+}
+.sz-intro-light {
+  opacity: 0;
+}
+.sz-intro-skip {
+  position: absolute;
+  right: max(28px, env(safe-area-inset-right));
+  bottom: max(26px, env(safe-area-inset-bottom));
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  padding: 12px 4px;
+  border: 0;
+  background: transparent;
+  color: #e1d7c5;
+  font:
+    500 12px/1.2 Arial,
+    sans-serif;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: color 180ms ease;
+}
+.sz-intro-skip:hover {
+  color: #d4aa55;
+}
+.sz-intro-skip:focus-visible {
+  outline: 1px solid #d4aa55;
+  outline-offset: 5px;
+}
+.sz-intro-skip span {
+  font-size: 18px;
+}
+html[data-sz-intro="running"] .sz-intro-dog path {
+  animation: sz-dog-draw 1900ms linear 180ms both;
+}
+html[data-sz-intro="running"] .sz-intro-dog {
+  animation: sz-dog-place 550ms cubic-bezier(0.22, 1, 0.36, 1) 1900ms both;
+}
+html[data-sz-intro="running"] .sz-intro-wordmark {
+  animation: sz-wordmark-in 450ms cubic-bezier(0.22, 1, 0.36, 1) 2250ms both;
+}
+html[data-sz-intro="running"] .sz-intro-dimmer {
+  animation: sz-logo-illuminate 900ms cubic-bezier(0.87, 0, 0.13, 1) 2550ms both;
+}
+html[data-sz-intro="running"] .sz-intro-light {
+  animation: sz-logo-light 1000ms cubic-bezier(0.65, 0, 0.35, 1) 2550ms both;
+}
+html[data-sz-intro="running"] .sz-intro-artwork {
+  animation: sz-logo-out 650ms cubic-bezier(0.76, 0, 0.24, 1) 3550ms both;
+}
+html[data-sz-intro="running"] .sz-intro-panels > span {
+  animation: sz-curtain-out 720ms cubic-bezier(0.76, 0, 0.24, 1) calc(3750ms + var(--panel) * 65ms)
+    both;
+}
+html[data-sz-intro="running"] .sz-intro-skip {
+  animation: sz-skip-out 200ms ease 3550ms forwards;
+}
+.sz-brand-intro.is-skipping {
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+@keyframes sz-dog-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes sz-dog-place {
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes sz-wordmark-in {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes sz-logo-illuminate {
+  to {
+    transform: scaleX(0);
+  }
+}
+@keyframes sz-logo-light {
+  0% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  15%,
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(520px);
+  }
+}
+@keyframes sz-logo-out {
+  to {
+    opacity: 0;
+    transform: translateY(-55px) rotate(4deg);
+  }
+}
+@keyframes sz-curtain-out {
+  to {
+    transform: translateY(-101%);
+  }
+}
+@keyframes sz-skip-out {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+@media (max-width: 600px) {
+  .sz-intro-artwork {
+    width: min(79vw, 390px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sz-brand-intro {
+    display: none !important;
+  }
+  html[data-sz-intro] {
+    overflow: auto;
+  }
+}

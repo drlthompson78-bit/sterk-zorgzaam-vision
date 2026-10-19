@@ -15,21 +15,30 @@ function useKaart() {
     if (!el) return;
     let map: import("leaflet").Map | undefined;
     let afgebroken = false;
+    const request = new AbortController();
+    let requestTimeout: number | undefined;
 
     const opzetten = async () => {
-      const L = (await import("leaflet")).default;
+      const [{ default: L }] = await Promise.all([
+        import("leaflet"),
+        import("leaflet/dist/leaflet.css"),
+      ]);
       if (afgebroken || !container.current) return;
 
       let coord = FALLBACK;
       try {
+        requestTimeout = window.setTimeout(() => request.abort(), 2500);
         const res = await fetch(
           `https://api.pdok.nl/bzk/locatieserver/search/v3_1/free?q=${encodeURIComponent(ADRES)}&rows=1&fl=centroide_ll`,
+          { signal: request.signal },
         );
         const data = await res.json();
         const punt = data?.response?.docs?.[0]?.centroide_ll?.match(/POINT\(([\d.]+) ([\d.]+)\)/);
         if (punt) coord = [parseFloat(punt[2]), parseFloat(punt[1])];
       } catch {
         /* val terug op de vaste coördinaat */
+      } finally {
+        window.clearTimeout(requestTimeout);
       }
       if (afgebroken || !container.current) return;
 
@@ -37,8 +46,9 @@ function useKaart() {
         coord,
         15,
       );
-      L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
-        attribution: "&copy; OpenStreetMap &copy; CARTO",
+      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         maxZoom: 19,
       }).addTo(map);
       L.marker(coord, { icon: L.divIcon({ className: "", html: MARKER_HTML, iconSize: [0, 0] }) })
@@ -48,9 +58,24 @@ function useKaart() {
         );
     };
 
-    opzetten();
+    // The contact section is far below the fold and hidden in the mobile layout.
+    // Wait until it approaches the viewport before loading Leaflet, geocoding or tiles.
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        observer.disconnect();
+        void opzetten().catch(() => {
+          // Contact details and the route link remain usable if the map cannot load.
+        });
+      },
+      { rootMargin: "480px 0px" },
+    );
+    observer.observe(el);
     return () => {
       afgebroken = true;
+      observer.disconnect();
+      request.abort();
+      window.clearTimeout(requestTimeout);
       map?.remove();
     };
   }, []);
@@ -146,7 +171,13 @@ export function Contact() {
             </a>
           </div>
         </div>
-        <div id="contact-map" className="sz-kaart" ref={kaart} />
+        <div
+          id="contact-map"
+          className="sz-kaart"
+          ref={kaart}
+          aria-label="Kaart van ons bezoekadres"
+          data-lenis-prevent
+        />
       </div>
     </section>
   );

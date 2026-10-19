@@ -239,7 +239,10 @@
   background: #132a34;
   overflow: hidden;
 }
-.mz-hero > img {
+.mz-hero > picture {
+  display: contents;
+}
+.mz-hero > picture > img {
   position: absolute;
   inset: 0;
   width: 100%;

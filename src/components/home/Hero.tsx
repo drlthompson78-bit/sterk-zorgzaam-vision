@@ -1,4 +1,5 @@
 import { ChevronDown } from "../site/icons";
+import { INACTIVE_HERO } from "@/lib/image-loading";
 
 export function Hero({
   briefOpen,
@@ -36,6 +37,7 @@ export function Hero({
         {/* Desktop toont de één-op-één-begeleiding; mobiel houdt bewust de
             groepsfoto. Niet gelijktrekken. */}
         <picture>
+          <source media="(max-width: 780px)" srcSet={INACTIVE_HERO} />
           <source
             type="image/webp"
             srcSet="/assets/hero-wandeling-800.webp 800w, /assets/hero-wandeling-1200.webp 1200w, /assets/hero-wandeling.webp 1672w"
@@ -47,6 +49,9 @@ export function Hero({
             sizes="(max-width: 1100px) 100vw, 55vw"
             alt="Een jongere en een begeleider lopen samen door de straat"
             fetchPriority="high"
+            decoding="async"
+            width={1672}
+            height={941}
           />
         </picture>
       </figure>

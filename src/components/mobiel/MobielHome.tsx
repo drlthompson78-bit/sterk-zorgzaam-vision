@@ -13,6 +13,7 @@ import {
   Phone,
 } from "@/components/site/icons";
 import { MobielActiebalk, MobielChroom, useVoorbijHero } from "./Chroom";
+import { INACTIVE_HERO } from "@/lib/image-loading";
 
 const PIJLERS = [
   {
@@ -201,6 +202,7 @@ function Interview({
       aria-hidden={!open}
       role="dialog"
       aria-label={persoon.naam}
+      data-lenis-prevent
     >
       <div className="mz-paneel-kop">
         <span className="mz-paneel-label">Maak kennis</span>
@@ -309,7 +311,22 @@ export function MobielHome() {
       <MobielChroom />
 
       <section id="m-top" className="mz-hero">
-        <img src="/assets/hero-youth.jpg" alt="" />
+        <picture>
+          <source media="(min-width: 781px)" srcSet={INACTIVE_HERO} />
+          <source
+            type="image/webp"
+            srcSet="/assets/hero-youth-800.webp 800w, /assets/hero-youth-1200.webp 1200w, /assets/hero-youth.webp 1800w"
+            sizes="(max-width: 430px) 100vw, 430px"
+          />
+          <img
+            src="/assets/hero-youth.jpg"
+            alt=""
+            fetchPriority="high"
+            decoding="async"
+            width={1800}
+            height={1020}
+          />
+        </picture>
         <span className="mz-hero-sluier" aria-hidden="true" />
         <div className="mz-hero-tekst">
           <h1>
@@ -455,7 +472,7 @@ export function MobielHome() {
               onClick={() => kiesPijler(i)}
               aria-pressed={pijler === i}
             >
-              <img src={item.src} alt="" />
+              <img src={item.src} alt="" loading="lazy" decoding="async" width={600} height={800} />
               <span className="mz-pijler-sluier" aria-hidden="true" />
               <span className="mz-pijler-titel">{item.kaart}</span>
             </button>
@@ -483,7 +500,14 @@ export function MobielHome() {
       <section id="m-doelgroep" className="mz-doelgroep">
         <h2>Er zijn als het schuurt</h2>
         <figure>
-          <img src="/assets/doelgroep-bankje.jpg" alt="Jongeren op een bankje" />
+          <img
+            src="/assets/doelgroep-bankje.jpg"
+            alt="Jongeren op een bankje"
+            loading="lazy"
+            decoding="async"
+            width={900}
+            height={600}
+          />
         </figure>
         <p className="mz-doelgroep-lead">
           Juist wanneer reguliere zorg geen aansluiting vindt, zoeken wij naar het contact dat
@@ -532,7 +556,14 @@ export function MobielHome() {
           Eén betrokken missie.
         </h2>
         <figure>
-          <img src="/assets/oprichters.jpg" alt="Miriam Twilt-Mendonça en Giovanni Peters" />
+          <img
+            src="/assets/oprichters.jpg"
+            alt="Miriam Twilt-Mendonça en Giovanni Peters"
+            loading="lazy"
+            decoding="async"
+            width={1800}
+            height={1195}
+          />
           <span className="mz-oprichters-sluier" aria-hidden="true" />
           <figcaption>
             {PERSONEN.map((persoon) => (

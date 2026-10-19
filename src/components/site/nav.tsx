@@ -1,23 +1,30 @@
 import { useEffect } from "react";
 import { useRouter } from "@tanstack/react-router";
+import { scrollToElement, scrollToPosition } from "@/lib/scroll";
+import { transitionPage } from "@/lib/page-transition";
 
 /**
  * Zachte scroll naar een anker, met offset voor de sticky header. Mobiel en
  * desktop zijn twee layouts naast elkaar; alleen de zichtbare telt.
  */
-export function scrollToId(id: string, offset = 90) {
-  const kandidaten = Array.from(document.querySelectorAll<HTMLElement>(`[id="${CSS.escape(id)}"]`));
+export function scrollToId(id: string, offset = 90, immediate = false) {
+  const mobileId = `m-${id}`;
+  const resolvedId =
+    window.matchMedia("(max-width: 780px)").matches && document.getElementById(mobileId)
+      ? mobileId
+      : id;
+  const kandidaten = Array.from(
+    document.querySelectorAll<HTMLElement>(`[id="${CSS.escape(resolvedId)}"]`),
+  );
   const el = kandidaten.find((k) => k.offsetParent !== null) ?? kandidaten[0];
   if (!el) return;
-  window.scrollTo({
-    top: el.getBoundingClientRect().top + window.scrollY - offset,
-    behavior: "smooth",
-  });
+  if (immediate) scrollToPosition(el.getBoundingClientRect().top + window.scrollY - offset, true);
+  else scrollToElement(el, -offset);
 }
 
 /**
- * Interne link met paginatransitie: body fade-out (600ms) → navigeren.
- * Zelfde timing als het prototype.
+ * Internal page links share Linden's latest cover / route swap / reveal.
+ * Same-page hashes remain regular anchors, including the visible mobile layout.
  */
 export function FadeLink({
   to,
@@ -25,6 +32,9 @@ export function FadeLink({
   className,
   children,
   onNavigate,
+  onClick,
+  target,
+  download,
   ...rest
 }: {
   to: string;
@@ -41,17 +51,36 @@ export function FadeLink({
       {...rest}
       href={href}
       className={className}
+      target={target}
+      download={download}
       onClick={(e) => {
-        if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+        onClick?.(e);
+        if (
+          e.defaultPrevented ||
+          e.metaKey ||
+          e.ctrlKey ||
+          e.shiftKey ||
+          e.altKey ||
+          e.button !== 0 ||
+          (target && target !== "_self") ||
+          (download !== undefined && download !== false)
+        )
+          return;
+        if (new URL(href, window.location.href).origin !== window.location.origin) return;
         e.preventDefault();
         onNavigate?.();
-        document.body.classList.add("sz-leaving");
-        window.setTimeout(() => {
-          router.navigate({ to, hash }).then(() => {
-            window.scrollTo({ top: 0 });
-            document.body.classList.remove("sz-leaving");
-          });
-        }, 610);
+        if (to === window.location.pathname) {
+          if (hash) scrollToId(hash);
+          else scrollToPosition(0);
+          return;
+        }
+        void transitionPage(
+          () => router.navigate({ to, hash }),
+          () => {
+            scrollToPosition(0, true);
+            if (hash) scrollToId(hash, 100, true);
+          },
+        );
       }}
     >
       {children}

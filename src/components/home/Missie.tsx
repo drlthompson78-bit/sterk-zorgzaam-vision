@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 import { Check, ChevronDown } from "../site/icons";
 
 const CHECKS = [
@@ -12,49 +13,7 @@ export function Missie({ toonPortret = true }: { toonPortret?: boolean }) {
   const [credo, setCredo] = useState(false);
   const lijst = useRef<HTMLUListElement>(null);
 
-  useEffect(() => {
-    const el = lijst.current;
-    if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    let io: IntersectionObserver | undefined;
-    let afgebroken = false;
-
-    import("gsap").then(({ gsap }) => {
-      if (afgebroken || !lijst.current) return;
-      const items = lijst.current.querySelectorAll("li");
-      gsap.set(items, { opacity: 0, y: 34 });
-      let speelt = false;
-      io = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((e) => {
-            if (e.intersectionRatio >= 0.55 && !speelt) {
-              speelt = true;
-              gsap.to(items, {
-                opacity: 1,
-                y: 0,
-                duration: 1.5,
-                delay: 0.25,
-                ease: "power3.out",
-                stagger: 0.45,
-                overwrite: true,
-              });
-            } else if (!e.isIntersecting && speelt) {
-              speelt = false;
-              gsap.set(items, { opacity: 0, y: 34 });
-            }
-          });
-        },
-        { threshold: [0, 0.55] },
-      );
-      io.observe(lijst.current);
-    });
-
-    return () => {
-      afgebroken = true;
-      io?.disconnect();
-    };
-  }, []);
+  useScrollReveal(lijst, "li", 34, 1500, 450, 250);
 
   return (
     <section id="missie" className="sz-section sz-missie" aria-labelledby="mission-title">
@@ -62,7 +21,14 @@ export function Missie({ toonPortret = true }: { toonPortret?: boolean }) {
         <div className="sz-portret" aria-hidden="true">
           <div className="sz-portret-vel sz-scheur" />
           <div className="sz-portret-foto sz-scheur">
-            <img src="/assets/hero-youth.jpg" alt="" />
+            <img
+              src="/assets/hero-youth.jpg"
+              alt=""
+              loading="lazy"
+              decoding="async"
+              width={1800}
+              height={1020}
+            />
           </div>
         </div>
       )}

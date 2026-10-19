@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { FadeLink } from "@/components/site/nav";
 import { ArrowLeft, ArrowRight, Close, Phone, Sparkle, User } from "@/components/site/icons";
 import { FGROEPEN, useTypewriter, zoeken } from "@/content/zoek";
+import { scrollToElement } from "@/lib/scroll";
 
 /*
  * Gedeelde onderdelen van de mobiele site: topbalk, menu, zoeken, inloggen en
@@ -19,11 +20,7 @@ const MENU_TEGELS = [
 /** Scrollt binnen de mobiele pagina, onder de vaste topbalk door. */
 export function mobielNaar(id: string) {
   const el = document.getElementById(id);
-  if (el)
-    window.scrollTo({
-      top: el.getBoundingClientRect().top + window.scrollY - 60,
-      behavior: "smooth",
-    });
+  if (el) scrollToElement(el, -60);
 }
 
 export function MobielTopbar({
@@ -100,7 +97,12 @@ export function MobielActiebalk({ zichtbaar = true }: { zichtbaar?: boolean }) {
 
 export function MobielMenu({ open, onSluiten }: { open: boolean; onSluiten: () => void }) {
   return (
-    <nav className={`mz-menu${open ? " is-open" : ""}`} aria-hidden={!open} aria-label="Hoofdmenu">
+    <nav
+      className={`mz-menu${open ? " is-open" : ""}`}
+      aria-hidden={!open}
+      aria-label="Hoofdmenu"
+      data-lenis-prevent
+    >
       <div className="mz-paneel-kop">
         <span className="mz-paneel-label mz-paneel-label--goud">Menu</span>
         <button
@@ -116,7 +118,7 @@ export function MobielMenu({ open, onSluiten }: { open: boolean; onSluiten: () =
         {MENU_TEGELS.map((tegel) =>
           tegel.to ? (
             <FadeLink key={tegel.label} to={tegel.to} className="mz-menu-tegel">
-              <img src={tegel.src} alt="" />
+              <img src={open ? tegel.src : undefined} alt="" decoding="async" />
               <span className="mz-menu-sluier" aria-hidden="true" />
               <span className="mz-menu-label">
                 {tegel.label}
@@ -134,7 +136,7 @@ export function MobielMenu({ open, onSluiten }: { open: boolean; onSluiten: () =
                 mobielNaar(tegel.hash!);
               }}
             >
-              <img src={tegel.src} alt="" />
+              <img src={open ? tegel.src : undefined} alt="" decoding="async" />
               <span className="mz-menu-sluier" aria-hidden="true" />
               <span className="mz-menu-label">
                 {tegel.label}
@@ -169,6 +171,7 @@ export function MobielZoeken({ open, onSluiten }: { open: boolean; onSluiten: ()
       aria-hidden={!open}
       role="dialog"
       aria-label="Zoeken"
+      data-lenis-prevent
       onClick={sluiten}
     >
       <div className="mz-zoek-kop">
