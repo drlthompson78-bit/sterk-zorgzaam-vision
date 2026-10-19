@@ -104,10 +104,10 @@ html[data-sz-intro="running"] .sz-intro-dog path {
   animation: sz-dog-draw 1900ms linear 180ms both;
 }
 html[data-sz-intro="running"] .sz-intro-dog {
-  animation: sz-dog-place 550ms cubic-bezier(0.22, 1, 0.36, 1) 1900ms both;
+  animation: sz-dog-place 850ms cubic-bezier(0.4, 0, 0.2, 1) 1900ms both;
 }
 html[data-sz-intro="running"] .sz-intro-wordmark {
-  animation: sz-wordmark-in 450ms cubic-bezier(0.22, 1, 0.36, 1) 2250ms both;
+  animation: sz-wordmark-in 800ms cubic-bezier(0.4, 0, 0.2, 1) 2250ms both;
 }
 html[data-sz-intro="running"] .sz-intro-dimmer {
   animation: sz-logo-illuminate 900ms cubic-bezier(0.87, 0, 0.13, 1) 2550ms both;
@@ -142,7 +142,7 @@ html[data-sz-intro="running"] .sz-intro-skip {
 @keyframes sz-wordmark-in {
   from {
     opacity: 0;
-    transform: translateY(7px);
+    transform: translateY(3px);
   }
   to {
     opacity: 1;
