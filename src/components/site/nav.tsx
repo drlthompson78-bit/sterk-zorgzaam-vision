@@ -23,8 +23,24 @@ export function scrollToId(id: string, offset = 90, immediate = false) {
 }
 
 /**
- * Internal page links share Linden's latest cover / route swap / reveal.
- * Same-page hashes remain regular anchors, including the visible mobile layout.
+ * Cover the current section, jump directly under the cover, then reveal it.
+ * The top links always return to the actual top of the page.
+ */
+export function fadeToId(id: string, offset?: number) {
+  return transitionPage(
+    async () => {},
+    () => {
+      if (id === "top" || id === "m-top") scrollToPosition(0, true);
+      else {
+        const headerOffset = offset ?? (window.matchMedia("(max-width: 780px)").matches ? 60 : 90);
+        scrollToId(id, headerOffset, true);
+      }
+    },
+  );
+}
+
+/**
+ * Internal page and section links share the same cover / position / reveal.
  */
 export function FadeLink({
   to,
@@ -70,8 +86,12 @@ export function FadeLink({
         e.preventDefault();
         onNavigate?.();
         if (to === window.location.pathname) {
-          if (hash) scrollToId(hash);
-          else scrollToPosition(0);
+          if (hash) void fadeToId(hash);
+          else
+            void transitionPage(
+              async () => {},
+              () => scrollToPosition(0, true),
+            );
           return;
         }
         void transitionPage(
@@ -88,12 +108,13 @@ export function FadeLink({
   );
 }
 
-/** Anker-link binnen dezelfde pagina. */
+/** Anker-link binnen dezelfde pagina, met dezelfde fade als een paginawissel. */
 export function AnchorLink({
   id,
   className,
   children,
   onNavigate,
+  onClick,
   ...rest
 }: {
   id: string;
@@ -107,9 +128,21 @@ export function AnchorLink({
       href={`#${id}`}
       className={className}
       onClick={(e) => {
+        onClick?.(e);
+        if (
+          e.defaultPrevented ||
+          e.metaKey ||
+          e.ctrlKey ||
+          e.shiftKey ||
+          e.altKey ||
+          e.button !== 0 ||
+          (e.currentTarget.target && e.currentTarget.target !== "_self") ||
+          e.currentTarget.hasAttribute("download")
+        )
+          return;
         e.preventDefault();
         onNavigate?.();
-        scrollToId(id);
+        void fadeToId(id);
       }}
     >
       {children}
@@ -122,7 +155,7 @@ export function useHashScroll() {
   useEffect(() => {
     const hash = window.location.hash.replace("#", "");
     if (!hash) return;
-    const t = window.setTimeout(() => scrollToId(hash, 100), 120);
+    const t = window.setTimeout(() => scrollToId(hash, 100, true), 120);
     return () => window.clearTimeout(t);
   }, []);
 }

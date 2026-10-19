@@ -1,0 +1,46 @@
+.sz-back-to-top {
+  position: fixed;
+  right: max(28px, env(safe-area-inset-right));
+  bottom: max(28px, env(safe-area-inset-bottom));
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 1px solid #d3a142;
+  border-radius: 50%;
+  background: #eee8dc;
+  color: #132a34;
+  box-shadow: 0 4px 18px #0b202820;
+  cursor: pointer;
+  transition: background-color 180ms ease;
+}
+.sz-back-to-top:hover {
+  background: #d3a142;
+}
+.sz-back-to-top:focus-visible {
+  outline: 2px solid #d3a142;
+  outline-offset: 4px;
+}
+.sz-back-to-top svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+@media (max-width: 780px) {
+  .sz-back-to-top {
+    right: max(20px, env(safe-area-inset-right));
+    bottom: calc(104px + env(safe-area-inset-bottom));
+    width: 44px;
+    height: 44px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sz-back-to-top {
+    transition: none;
+  }
+}

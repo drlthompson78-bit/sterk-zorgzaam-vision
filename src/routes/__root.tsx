@@ -13,6 +13,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { BrandIntro, brandIntroBootstrap } from "@/components/site/BrandIntro";
 import { SmoothScroll } from "@/components/site/SmoothScroll";
 import { PageTransition } from "@/components/site/PageTransition";
+import { BackToTop } from "@/components/site/BackToTop";
 
 function NotFoundComponent() {
   return (
@@ -160,6 +161,7 @@ function RootComponent() {
       <PageTransition />
       <div id="sz-site-content">
         <Outlet />
+        <BackToTop />
       </div>
       <Toaster position="top-center" richColors />
     </QueryClientProvider>

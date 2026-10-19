@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { FadeLink } from "@/components/site/nav";
+import { FadeLink, fadeToId } from "@/components/site/nav";
 import { ArrowLeft, ArrowRight, Close, Phone, Sparkle, User } from "@/components/site/icons";
 import { FGROEPEN, useTypewriter, zoeken } from "@/content/zoek";
-import { scrollToElement } from "@/lib/scroll";
 
 /*
  * Gedeelde onderdelen van de mobiele site: topbalk, menu, zoeken, inloggen en
@@ -17,10 +16,9 @@ const MENU_TEGELS = [
   { label: "Contact", hash: "m-contact", src: "/assets/menu-contact.jpg" },
 ];
 
-/** Scrollt binnen de mobiele pagina, onder de vaste topbalk door. */
+/** Wisselt van sectie via een fade, met ruimte onder de vaste topbalk. */
 export function mobielNaar(id: string) {
-  const el = document.getElementById(id);
-  if (el) scrollToElement(el, -60);
+  void fadeToId(id, 60);
 }
 
 export function MobielTopbar({
@@ -117,7 +115,12 @@ export function MobielMenu({ open, onSluiten }: { open: boolean; onSluiten: () =
       <div className="mz-menu-raster">
         {MENU_TEGELS.map((tegel) =>
           tegel.to ? (
-            <FadeLink key={tegel.label} to={tegel.to} className="mz-menu-tegel">
+            <FadeLink
+              key={tegel.label}
+              to={tegel.to}
+              className="mz-menu-tegel"
+              onNavigate={onSluiten}
+            >
               <img src={open ? tegel.src : undefined} alt="" decoding="async" />
               <span className="mz-menu-sluier" aria-hidden="true" />
               <span className="mz-menu-label">
