@@ -19,9 +19,17 @@ export const ERKENNINGEN = [
     href: "https://www.jeugdstem.nl",
     src: "/assets/keurmerk-jeugdstem.svg",
     alt: "JeugdStem — vertrouwenspersonen AKJ",
-    label: "Vertrouwenspersoon",
+    label: "Vertrouwenspersoon jeugd",
     hoogte: 52,
     hoogteMobiel: 44,
+  },
+  {
+    href: "https://www.veiligenvertrouwd.nl/",
+    src: "/assets/keurmerk-veilig-en-vertrouwd.svg",
+    alt: "Veilig en Vertrouwd",
+    label: "Vertrouwenspersoon medewerkers",
+    hoogte: 48,
+    hoogteMobiel: 40,
   },
   {
     href: "https://skjeugd.nl",
