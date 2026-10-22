@@ -1,0 +1,5 @@
+﻿{
+  "Description": "Controlebestand voor domeineigendom voor Microsoft 365 - plaats in de hoofdmap van de website",
+  "Domain": "sterkzorgzaam.nl",
+  "Id": "1cd5e50b-c6b8-45fd-b6e6-1a7978b446e9"
+}
